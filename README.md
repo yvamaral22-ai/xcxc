@@ -1,16 +1,16 @@
 # SGI OS
 
-Portal corporativo para gestao integrada de seguranca, auditoria, governanca documental e acessos operacionais.
+Portal corporativo para gestão integrada de segurança, auditoria, governança documental e acessos operacionais.
 
 ## Base usada
 
 O projeto foi iniciado a partir do HTML `PORTAL SGI AUDITORIA.html`, mantendo os principais conceitos:
 
 - SGI OS como central institucional.
-- Acessos reais para VES, SharePoint SESMT, Inspecao N3, DDS, EPI e suporte.
+- Acessos reais para VES, SharePoint SESMT, Inspeção N3, DDS, EPI e suporte.
 - Painel executivo com indicadores.
-- Modulos de Seguranca do Trabalho, Meio Ambiente, Treinamentos e Governanca.
-- Camada de auditoria, evidencias e roteiro de evolucao.
+- Módulos de Segurança do Trabalho, Meio Ambiente, Treinamentos e Governança.
+- Camada de auditoria, evidências e roteiro de evolução.
 
 ## Como abrir
 
@@ -20,4 +20,4 @@ Abra `index.html` no navegador.
 
 - `index.html`: estrutura principal do portal.
 - `styles.css`: identidade visual e responsividade.
-- `app.js`: dados dos modulos, integracoes, auditoria e interacoes.
+- `app.js`: dados dos módulos, integrações, auditoria e interações.
