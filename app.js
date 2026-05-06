@@ -1,29 +1,29 @@
 const modules = [
   {
     tag: "Core",
-    titleHtml: "Seguranca do Trabalho",
-    textHtml: "Rotina operacional com inspecoes, DDS, APR, bloqueio, EPI e suporte em uma leitura mais direta.",
-    items: ["Inspecao N3", "DDS", "Solicitacao de EPI"],
+    titleHtml: "Segurança do Trabalho",
+    textHtml: "Rotina operacional com inspeções, DDS, APR, bloqueio, EPI e suporte.",
+    items: ["Inspeção N3", "DDS", "Solicitação de EPI"],
     href: "#integracoes",
   },
   {
     tag: "Ambiental",
     titleHtml: "Meio Ambiente",
-    textHtml: "Frente para residuos, descarte, 5S e conformidade ambiental com espaco para evidencias e planos.",
-    items: ["Evidencias", "Planos de acao", "Rotinas de campo"],
+    textHtml: "Frente para resíduos, descarte, 5S e conformidade ambiental.",
+    items: ["Evidências", "Planos de ação", "Rotinas de campo"],
     href: "#auditoria",
   },
   {
     tag: "Pessoas",
     titleHtml: "Treinamentos",
-    textHtml: "Gestao de integracao, capacitacao, validade e competencias criticas em uma camada mais clara.",
+    textHtml: "Gestão de integração, capacitação, validade e competências críticas.",
     items: ["Matriz de treinamento", "Validades", "Reciclagens"],
     href: "#governanca",
   },
   {
     tag: "Gestao",
-    titleHtml: "Indicadores e Governanca",
-    textHtml: "Camada executiva para auditoria, apresentacao e tomada de decisao com leitura visual mais premium.",
+    titleHtml: "Indicadores e Governança",
+    textHtml: "Camada executiva para auditoria, apresentação e tomada de decisão.",
     items: ["KPIs", "BI", "Versionamento"],
     href: "#painel",
   },
@@ -33,62 +33,62 @@ const integrations = [
   {
     title: "VES Vale",
     titleHtml: "VES Vale",
-    descriptionHtml: "Solicitacao institucional de acesso ao sistema VES com entrada direta pelo portal.",
+    descriptionHtml: "Solicitação institucional de acesso ao sistema VES.",
     type: "Acesso",
     owner: "Vale",
     status: "Ativo",
     href: "https://vale-forms.valeglobal.net/public?id=%2FGCDd9v%2B3IvFnie%2F2yYRKg%3D%3D&lang=pt-BR",
-    searchText: "ves vale acesso formulario sistema institucional",
+    searchText: "ves vale acesso formulário sistema institucional",
   },
   {
-    title: "Documentacoes SESMT",
-    titleHtml: "Documentacoes SESMT",
-    descriptionHtml: "Biblioteca SharePoint com os documentos institucionais da area e apoio a auditoria.",
+    title: "Documentações SESMT",
+    titleHtml: "Documentações SESMT",
+    descriptionHtml: "Biblioteca SharePoint com documentos institucionais da área.",
     type: "Biblioteca",
     owner: "SESMT",
     status: "Ativo",
     href: "https://xcmgbrasilindustria.sharepoint.com/sites/SGI-DOCUMENTAOSESMTXCMG/Documentos%20Compartilhados/Forms/AllItems.aspx?viewid=8817a399%2D4028%2D4a45%2Db3fc%2D1c0176611a0e&as=json",
-    searchText: "documentacoes sesmt sharepoint biblioteca documentos institucional",
+    searchText: "documentações sesmt sharepoint biblioteca documentos institucional",
   },
   {
-    title: "Inspecao N3",
-    titleHtml: "Inspecao N3",
-    descriptionHtml: "Registro operacional das inspecoes criticas da operacao com leitura rapida.",
-    type: "Formulario",
-    owner: "Seguranca",
+    title: "Inspeção N3",
+    titleHtml: "Inspeção N3",
+    descriptionHtml: "Registro operacional das inspeções críticas da operação.",
+    type: "Formulário",
+    owner: "Segurança",
     status: "Ativo",
     href: "https://forms.office.com/r/uftekVRsSy?origin=lprLink",
-    searchText: "inspecao n3 formulario seguranca operacao registro",
+    searchText: "inspeção n3 formulário segurança operação registro",
   },
   {
     title: "DDS",
     titleHtml: "DDS",
-    descriptionHtml: "Canal diario de comunicacao preventiva e alinhamento para rotina segura.",
-    type: "Formulario",
-    owner: "Operacao",
+    descriptionHtml: "Canal diário de comunicação preventiva e alinhamento.",
+    type: "Formulário",
+    owner: "Operação",
     status: "Ativo",
     href: "https://forms.office.com/r/tugrbGGgUu?origin=lprLink",
-    searchText: "dds formulario operacao comunicacao preventiva diario",
+    searchText: "dds formulário operação comunicação preventiva diário",
   },
   {
-    title: "Solicitacao de EPI",
-    titleHtml: "Solicitacao de EPI",
-    descriptionHtml: "Canal formal para requisicoes de equipamentos de protecao com entrada objetiva.",
-    type: "Formulario",
+    title: "Solicitação de EPI",
+    titleHtml: "Solicitação de EPI",
+    descriptionHtml: "Canal formal para requisições de equipamentos de proteção.",
+    type: "Formulário",
     owner: "SESMT",
     status: "Ativo",
     href: "https://forms.office.com/r/35NYBAHrab?origin=lprLink",
-    searchText: "epi formulario solicitacao sesmt requisicao equipamentos",
+    searchText: "epi formulário solicitação sesmt requisição equipamentos",
   },
   {
-    title: "WhatsApp Seguranca",
-    titleHtml: "WhatsApp Seguranca",
-    descriptionHtml: "Contato rapido com a equipe de apoio para destravar duvidas e atendimento.",
+    title: "WhatsApp Segurança",
+    titleHtml: "WhatsApp Segurança",
+    descriptionHtml: "Contato rápido com a equipe de apoio da segurança.",
     type: "Suporte",
-    owner: "Seguranca",
+    owner: "Segurança",
     status: "Ativo",
     href: "https://wa.me/5531971840458?text=Ol%C3%A1%2C%20preciso%20de%20apoio%20na%20gest%C3%A3o%20de%20seguran%C3%A7a.",
-    searchText: "whatsapp seguranca suporte contato apoio atendimento",
+    searchText: "whatsapp segurança suporte contato apoio atendimento",
   },
 ];
 
@@ -96,21 +96,21 @@ const audits = [
   {
     itemHtml: "Atualizar biblioteca oficial de procedimentos",
     originHtml: "SESMT Docs",
-    ownerHtml: "Coordenacao SGI",
+    ownerHtml: "Coordenação SGI",
     due: "10/05/2026",
     status: "Em andamento",
     level: "warn",
   },
   {
-    itemHtml: "Validar evidencias das inspecoes N3",
-    originHtml: "Inspecao N3",
-    ownerHtml: "Tecnico de seguranca",
+    itemHtml: "Validar evidências das inspeções N3",
+    originHtml: "Inspeção N3",
+    ownerHtml: "Técnico de segurança",
     due: "08/05/2026",
     status: "Prioridade",
     level: "danger",
   },
   {
-    itemHtml: "Consolidar indicadores para reuniao executiva",
+    itemHtml: "Consolidar indicadores para reunião executiva",
     originHtml: "Painel SGI",
     ownerHtml: "Analista SGI",
     due: "12/05/2026",
@@ -118,8 +118,8 @@ const audits = [
     level: "warn",
   },
   {
-    itemHtml: "Revisar canal de solicitacao de EPI",
-    originHtml: "Formulario EPI",
+    itemHtml: "Revisar canal de solicitação de EPI",
+    originHtml: "Formulário EPI",
     ownerHtml: "Almoxarifado + SESMT",
     due: "06/05/2026",
     status: "Resolvido",
@@ -130,30 +130,30 @@ const audits = [
 const roadmap = [
   {
     number: "1",
-    titleHtml: "Validacao visual",
-    textHtml: "Interface premium, mais clara e mais consistente para uso diario e institucional.",
+    titleHtml: "Validação visual",
+    textHtml: "Conceito premium e postura institucional",
     status: "Pronto",
     level: "ok",
   },
   {
     number: "2",
     titleHtml: "Dados reais",
-    textHtml: "Aprofundar numeros, responsaveis, regras de atualizacao e conteudo oficial.",
-    status: "Proxima fase",
+    textHtml: "Números, responsáveis e conteúdos oficiais",
+    status: "Próxima fase",
     level: "warn",
   },
   {
     number: "3",
-    titleHtml: "Publicacao",
-    textHtml: "Hospedagem, ambiente oficial, governanca de acesso e rotina de manutencao.",
+    titleHtml: "Publicação",
+    textHtml: "Hospedagem e ambiente oficial",
     status: "Planejado",
     level: "warn",
   },
   {
     number: "4",
-    titleHtml: "Expansao",
-    textHtml: "BI, biblioteca, permissoes e novos modulos na mesma estrutura visual.",
-    status: "Escalavel",
+    titleHtml: "Expansão",
+    textHtml: "BI, biblioteca, permissões e novos módulos",
+    status: "Escalável",
     level: "ok",
   },
 ];
@@ -172,7 +172,7 @@ const heroMedia = document.querySelector(".hero-media");
 let showResolved = true;
 
 function statusClass(status) {
-  if (["Ativo", "Pronto", "Escalavel", "Resolvido"].includes(status)) return "ok";
+  if (["Ativo", "Pronto", "Escalável", "Resolvido"].includes(status)) return "ok";
   if (status === "Prioridade") return "danger";
   return "warn";
 }
@@ -188,7 +188,7 @@ function renderModules() {
           <ul class="module-list">
             ${module.items.map((item) => `<li>${item}</li>`).join("")}
           </ul>
-          <a class="button neutral has-arrow" href="${module.href}"><span>Abrir modulo</span></a>
+          <a class="button neutral has-arrow" href="${module.href}"><span>Abrir módulo</span></a>
         </article>
       `,
     )
@@ -204,7 +204,7 @@ function renderIntegrations(filter = "") {
   if (!filtered.length) {
     integrationGrid.innerHTML = `
       <article class="integration-empty">
-        Nenhuma integracao encontrada para a busca atual. Tente outro termo como VES, DDS ou EPI.
+        Nenhuma integração encontrada para a busca atual. Tente outro termo como VES, DDS ou EPI.
       </article>
     `;
     return;
