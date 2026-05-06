@@ -1657,15 +1657,26 @@ body.nav-open .sidebar-overlay {
   max-height: 100%;
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.75fr);
-  overflow: auto;
-  overscroll-behavior: contain;
+  overflow: hidden;
   border: 1px solid rgba(19, 61, 94, 0.1);
   border-radius: 26px;
   background: rgba(255, 255, 255, 0.74);
 }
 
 .highlight-category-scroll {
-  min-height: calc(560px + var(--highlight-photo-distance));
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: var(--highlight-photo-distance);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.highlight-category-scroll::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 .highlight-category-sticky {
@@ -1763,6 +1774,7 @@ body.nav-open .sidebar-overlay {
 .highlight-viewer-content {
   display: grid;
   align-content: center;
+  align-self: center;
   gap: 16px;
   padding: 28px;
 }
@@ -2730,7 +2742,8 @@ tbody tr:last-child td {
   }
 
   .highlight-category-scroll {
-    min-height: calc(420px + var(--highlight-photo-distance));
+    height: 100%;
+    padding-bottom: var(--highlight-photo-distance);
   }
 
   .highlight-category-sticky {
@@ -2843,11 +2856,13 @@ tbody tr:last-child td {
     grid-column: 1 / -1;
     grid-row: 1;
     max-height: calc(100vh - 280px);
-    overflow: auto;
+    overflow: hidden;
   }
 
   .highlight-category-scroll {
-    min-height: auto;
+    height: auto;
+    padding-bottom: 0;
+    overflow-y: visible;
   }
 
   .highlight-category-sticky {

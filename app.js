@@ -378,7 +378,6 @@ const formModalTitle = document.querySelector("#formModalTitle");
 const formFrame = document.querySelector("#formFrame");
 const formExternalLink = document.querySelector("#formExternalLink");
 const highlightModal = document.querySelector("#highlightModal");
-const highlightViewerCard = document.querySelector(".highlight-viewer-card");
 const highlightModalTitle = document.querySelector("#highlightModalTitle");
 const highlightModalSubtitle = document.querySelector("#highlightModalSubtitle");
 const highlightModalText = document.querySelector("#highlightModalText");
@@ -696,7 +695,7 @@ function updateHighlightModal(index) {
     });
   }
 
-  if (highlightViewerCard) highlightViewerCard.scrollTop = 0;
+  if (highlightCategoryScroll) highlightCategoryScroll.scrollTop = 0;
   setupHighlightPhotoScroll();
 }
 
@@ -742,11 +741,11 @@ function setupHighlightPhotoScroll() {
 }
 
 function updateHighlightPhotoScroll() {
-  if (!highlightViewerCard || !highlightCategoryScroll || !highlightModalPhotoStrip) return;
+  if (!highlightCategoryScroll || !highlightModalPhotoStrip) return;
   if (!highlightPhotoScrollDistance || window.innerWidth <= 720) return;
 
-  const scrollableHeight = Math.max(1, highlightViewerCard.scrollHeight - highlightViewerCard.clientHeight);
-  const progress = clamp(highlightViewerCard.scrollTop / scrollableHeight, 0, 1);
+  const scrollableHeight = Math.max(1, highlightCategoryScroll.scrollHeight - highlightCategoryScroll.clientHeight);
+  const progress = clamp(highlightCategoryScroll.scrollTop / scrollableHeight, 0, 1);
 
   highlightCategoryScroll.style.setProperty("--highlight-photo-x", `${(highlightPhotoScrollDistance * -progress).toFixed(2)}px`);
   highlightCategoryScroll.style.setProperty("--highlight-photo-progress", `${(progress * 100).toFixed(2)}%`);
@@ -1219,7 +1218,7 @@ window.addEventListener("resize", () => {
   syncActiveNavigation();
 });
 
-highlightViewerCard?.addEventListener("scroll", updateHighlightPhotoScroll, { passive: true });
+highlightCategoryScroll?.addEventListener("scroll", updateHighlightPhotoScroll, { passive: true });
 
 window.addEventListener("load", setupHighlightPhotoScroll);
 
