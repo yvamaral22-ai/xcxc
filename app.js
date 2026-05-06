@@ -203,40 +203,7 @@ const integrations = [
   },
 ];
 
-const audits = [
-  {
-    itemHtml: "Atualizar biblioteca oficial de procedimentos",
-    originHtml: "SESMT Docs",
-    ownerHtml: "Coordenação SGI",
-    due: "10/05/2026",
-    status: "Em andamento",
-    level: "warn",
-  },
-  {
-    itemHtml: "Validar evidências das inspeções N3",
-    originHtml: "Inspeção N3",
-    ownerHtml: "Técnico de segurança",
-    due: "08/05/2026",
-    status: "Prioridade",
-    level: "danger",
-  },
-  {
-    itemHtml: "Consolidar indicadores para reunião executiva",
-    originHtml: "Painel SGI",
-    ownerHtml: "Analista SGI",
-    due: "12/05/2026",
-    status: "Em andamento",
-    level: "warn",
-  },
-  {
-    itemHtml: "Revisar canal de solicitação de EPI",
-    originHtml: "Formulário EPI",
-    ownerHtml: "Almoxarifado + SESMT",
-    due: "06/05/2026",
-    status: "Resolvido",
-    level: "ok",
-  },
-];
+const audits = [];
 
 const campaigns = [
   {
@@ -262,6 +229,49 @@ const campaigns = [
   },
 ];
 
+const highlights = [
+  {
+    label: "Seguranca",
+    titleHtml: "Destaque do mes em seguranca",
+    textHtml: "Reconhecimento para atitude preventiva, cuidado ativo e boas praticas em campo.",
+    image: "./assets/destaque-seguranca.jpg",
+    alt: "Foto do destaque do mes em seguranca",
+    status: "Mensal",
+  },
+  {
+    label: "Kaizen",
+    titleHtml: "Destaque Kaizen",
+    textHtml: "Melhoria aplicada que reduziu risco, aumentou organizacao ou elevou a eficiencia da operacao.",
+    image: "./assets/destaque-kaizen.jpg",
+    alt: "Foto do destaque Kaizen",
+    status: "Melhoria",
+  },
+  {
+    label: "N3",
+    titleHtml: "N3 destaque",
+    textHtml: "Registro de desvio, tratativa ou acao exemplar com impacto direto na seguranca operacional.",
+    image: "./assets/destaque-n3.jpg",
+    alt: "Foto do destaque N3",
+    status: "Operacao",
+  },
+  {
+    label: "Inspecao",
+    titleHtml: "Inspecao destaque",
+    textHtml: "Inspecao com evidencia forte, criterio tecnico e encaminhamento claro para a rotina.",
+    image: "./assets/destaque-inspecao.jpg",
+    alt: "Foto da inspecao destaque",
+    status: "Auditoria",
+  },
+  {
+    label: "Equipe",
+    titleHtml: "Fotos da equipe",
+    textHtml: "Galeria institucional para valorizar o time responsavel pela rotina de seguranca.",
+    image: "./assets/destaque-equipe.jpg",
+    alt: "Foto da equipe de seguranca",
+    status: "Equipe",
+  },
+];
+
 const mediaItems = [
   {
     titleHtml: "DDS - Seguranca nas Maos",
@@ -280,62 +290,8 @@ const mediaItems = [
   },
 ];
 
-const indicators = [
-  { label: "N3 no mes", value: "142", goal: "Meta 150", tone: "good" },
-  { label: "DDS realizados", value: "97%", goal: "Meta 95%", tone: "info" },
-  { label: "Treinamentos", value: "07", goal: "Vencendo no mes", tone: "warn" },
-  { label: "Pendencias", value: "03", goal: "Prioridade RAC", tone: "danger" },
-];
-
-const ranking = [
-  { name: "Joao Silva", value: "28" },
-  { name: "Pedro Santos", value: "24" },
-  { name: "Carlos Lima", value: "18" },
-  { name: "Rafael Costa", value: "15" },
-  { name: "Lucas Martins", value: "12" },
-];
-
-const units = [
-  { name: "Brucutu", value: "78", detail: "Registros N3" },
-  { name: "Itabira", value: "70", detail: "Registros N3" },
-];
-
-const epiStorageKey = "sgiEpiRecords";
-const defaultEpiRecords = [
-  {
-    id: "epi-1",
-    employee: "Joao Silva",
-    registration: "XCMG-1024",
-    item: "Capacete com jugular",
-    code: "CA 498",
-    deliveredAt: "2026-04-12T08:30",
-    validityDays: 180,
-    quantity: 1,
-    notes: "Entrega inicial",
-  },
-  {
-    id: "epi-2",
-    employee: "Pedro Santos",
-    registration: "XCMG-1170",
-    item: "Luva anticorte",
-    code: "CA 32035",
-    deliveredAt: "2025-11-20T14:10",
-    validityDays: 180,
-    quantity: 2,
-    notes: "Reposicao",
-  },
-  {
-    id: "epi-3",
-    employee: "Carlos Lima",
-    registration: "XCMG-0988",
-    item: "Oculos de protecao",
-    code: "CA 10344",
-    deliveredAt: "2026-02-03T09:00",
-    validityDays: 120,
-    quantity: 1,
-    notes: "Rotina de campo",
-  },
-];
+const epiStorageKey = "sgiEpiRecordsV2";
+const defaultEpiRecords = [];
 
 const roadmap = [
   {
@@ -374,6 +330,7 @@ const auditRows = document.querySelector("#auditRows");
 const roadmapNode = document.querySelector("#roadmap");
 const campaignList = document.querySelector("#campaignList");
 const mediaList = document.querySelector("#mediaList");
+const highlightGrid = document.querySelector("#highlightGrid");
 const indicatorRings = document.querySelector("#indicatorRings");
 const rankingList = document.querySelector("#rankingList");
 const unitGrid = document.querySelector("#unitGrid");
@@ -397,6 +354,29 @@ const formFrame = document.querySelector("#formFrame");
 const formExternalLink = document.querySelector("#formExternalLink");
 let showResolved = true;
 let epiRecords = loadEpiRecords();
+
+const metricNodes = {
+  miniCompliance: document.querySelector("#miniCompliance"),
+  miniRequests: document.querySelector("#miniRequests"),
+  miniIntegrations: document.querySelector("#miniIntegrations"),
+  miniOpenItems: document.querySelector("#miniOpenItems"),
+  heroIntegrationCount: document.querySelector("#heroIntegrationCount"),
+  statusCompliance: document.querySelector("#statusCompliance"),
+  statusComplianceLabel: document.querySelector("#statusComplianceLabel"),
+  statusRequests: document.querySelector("#statusRequests"),
+  statusRequestsLabel: document.querySelector("#statusRequestsLabel"),
+  statusIntegrations: document.querySelector("#statusIntegrations"),
+  statusOpenItems: document.querySelector("#statusOpenItems"),
+  statusOpenLabel: document.querySelector("#statusOpenLabel"),
+  blueprintRequests: document.querySelector("#blueprintRequests"),
+  blueprintSheets: document.querySelector("#blueprintSheets"),
+  blueprintCompliant: document.querySelector("#blueprintCompliant"),
+  blueprintOpenItems: document.querySelector("#blueprintOpenItems"),
+  previewRequests: document.querySelector("#previewRequests"),
+  previewCompliance: document.querySelector("#previewCompliance"),
+  previewSheets: document.querySelector("#previewSheets"),
+  previewOpenItems: document.querySelector("#previewOpenItems"),
+};
 
 function statusClass(status) {
   if (["Ativo", "Pronto", "Escalável", "Resolvido"].includes(status)) return "ok";
@@ -447,6 +427,106 @@ function getEpiStatus(record) {
   }
 
   return { label: `Em dia: ${diffDays} dia(s)`, level: "ok", diffDays, expiresAt };
+}
+
+function isSpreadsheetAccess(item) {
+  const text = [item.title, item.descriptionHtml, item.type, item.href, item.searchText].join(" ").toLowerCase();
+  return ["sharepoint", "biblioteca", "document", "excel", "sheet", "planilha"].some((term) => text.includes(term));
+}
+
+function isRequestAccess(item) {
+  return ["Acesso", "Comunicado", "Formulario", "Formulário"].includes(item.type);
+}
+
+function getEpiTotals() {
+  return epiRecords.reduce(
+    (acc, record) => {
+      const status = getEpiStatus(record);
+      if (status.level === "danger") acc.expired += 1;
+      else if (status.level === "warn") acc.soon += 1;
+      else acc.ok += 1;
+      return acc;
+    },
+    { ok: 0, soon: 0, expired: 0 },
+  );
+}
+
+function getOperationalMetrics() {
+  const activeIntegrations = integrations.filter((item) => item.status === "Ativo").length;
+  const spreadsheetAccesses = integrations.filter(isSpreadsheetAccess).length;
+  const requestAccesses = integrations.filter(isRequestAccess).length;
+  const openAudits = audits.filter((audit) => audit.status !== "Resolvido").length;
+  const epiTotals = getEpiTotals();
+  const openItems = openAudits + epiTotals.soon + epiTotals.expired;
+  const totalTracked = requestAccesses + epiRecords.length + audits.length;
+  const compliantTracked = requestAccesses + epiTotals.ok + audits.filter((audit) => audit.status === "Resolvido").length;
+  const compliance = totalTracked ? Math.round((compliantTracked / totalTracked) * 100) : 100;
+
+  return {
+    activeIntegrations,
+    spreadsheetAccesses,
+    requestAccesses,
+    openAudits,
+    epiTotals,
+    openItems,
+    totalRequests: requestAccesses + epiRecords.length,
+    compliance,
+  };
+}
+
+function getCalculatedRanking() {
+  const totalsByEmployee = epiRecords.reduce((acc, record) => {
+    const name = record.employee || "Sem identificacao";
+    acc[name] = (acc[name] || 0) + Number(record.quantity || 1);
+    return acc;
+  }, {});
+
+  return Object.entries(totalsByEmployee)
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 5);
+}
+
+function getCalculatedOrigins() {
+  const totalsByOwner = integrations.reduce((acc, item) => {
+    const name = item.owner || "Sem origem";
+    acc[name] = (acc[name] || 0) + 1;
+    return acc;
+  }, {});
+
+  return Object.entries(totalsByOwner)
+    .map(([name, value]) => ({ name, value, detail: "Acessos cadastrados" }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 4);
+}
+
+function setText(node, value) {
+  if (node) node.textContent = value;
+}
+
+function renderCalculatedMetrics() {
+  const metrics = getOperationalMetrics();
+
+  setText(metricNodes.miniCompliance, `${metrics.compliance}%`);
+  setText(metricNodes.miniRequests, String(metrics.totalRequests).padStart(2, "0"));
+  setText(metricNodes.miniIntegrations, String(metrics.activeIntegrations).padStart(2, "0"));
+  setText(metricNodes.miniOpenItems, String(metrics.openItems).padStart(2, "0"));
+  setText(metricNodes.heroIntegrationCount, String(metrics.activeIntegrations).padStart(2, "0"));
+  setText(metricNodes.statusCompliance, `${metrics.compliance}%`);
+  setText(metricNodes.statusComplianceLabel, `${metrics.epiTotals.ok} EPIs em dia`);
+  setText(metricNodes.statusRequests, String(metrics.totalRequests).padStart(2, "0"));
+  setText(metricNodes.statusRequestsLabel, `${metrics.requestAccesses} acessos + ${epiRecords.length} entregas`);
+  setText(metricNodes.statusIntegrations, String(metrics.activeIntegrations).padStart(2, "0"));
+  setText(metricNodes.statusOpenItems, String(metrics.openItems).padStart(2, "0"));
+  setText(metricNodes.statusOpenLabel, `${metrics.openAudits} auditoria + ${metrics.epiTotals.soon + metrics.epiTotals.expired} EPI`);
+  setText(metricNodes.blueprintRequests, String(metrics.totalRequests));
+  setText(metricNodes.blueprintSheets, String(metrics.spreadsheetAccesses));
+  setText(metricNodes.blueprintCompliant, metrics.openItems ? "Nao" : "Sim");
+  setText(metricNodes.blueprintOpenItems, String(metrics.openItems).padStart(2, "0"));
+  setText(metricNodes.previewRequests, String(metrics.totalRequests));
+  setText(metricNodes.previewCompliance, `${metrics.compliance}%`);
+  setText(metricNodes.previewSheets, String(metrics.spreadsheetAccesses));
+  setText(metricNodes.previewOpenItems, String(metrics.openItems).padStart(2, "0"));
 }
 
 function renderModules() {
@@ -534,6 +614,16 @@ function closeEmbeddedIntegration() {
 
 function renderAudits() {
   const rows = audits.filter((audit) => showResolved || audit.status !== "Resolvido");
+  if (!rows.length) {
+    auditRows.innerHTML = `
+      <tr>
+        <td colspan="5">Nenhuma acao aberta cadastrada em fonte integrada.</td>
+      </tr>
+    `;
+    toggleResolved.innerHTML = `<span>${showResolved ? "Ocultar resolvidos" : "Mostrar resolvidos"}</span>`;
+    return;
+  }
+
   auditRows.innerHTML = rows
     .map(
       (audit) => `
@@ -654,10 +744,60 @@ function renderCampaigns() {
     .join("");
 }
 
+function renderHighlights() {
+  if (!highlightGrid) return;
+
+  highlightGrid.innerHTML = highlights
+    .map(
+      (highlight, index) => `
+        <article class="highlight-card ${index === 0 ? "highlight-card-featured" : ""}">
+          <div class="highlight-photo">
+            <img src="${highlight.image}" alt="${highlight.alt}" loading="lazy" onerror="this.closest('.highlight-photo').classList.add('is-missing'); this.remove();" />
+            <span>${highlight.label}</span>
+          </div>
+          <div class="highlight-content">
+            <span class="tag">${highlight.status}</span>
+            <h3>${highlight.titleHtml}</h3>
+            <p>${highlight.textHtml}</p>
+          </div>
+        </article>
+      `,
+    )
+    .join("");
+}
+
 function renderIndicators() {
   if (!indicatorRings || !rankingList || !unitGrid) return;
 
-  indicatorRings.innerHTML = indicators
+  const metrics = getOperationalMetrics();
+  const calculatedIndicators = [
+    {
+      label: "Requisicoes",
+      value: String(metrics.totalRequests).padStart(2, "0"),
+      goal: `${metrics.requestAccesses} acessos + ${epiRecords.length} EPIs`,
+      tone: "info",
+    },
+    {
+      label: "Planilhas / docs",
+      value: String(metrics.spreadsheetAccesses).padStart(2, "0"),
+      goal: "Acessos calculados",
+      tone: "info",
+    },
+    {
+      label: "Conformidade",
+      value: `${metrics.compliance}%`,
+      goal: `${metrics.epiTotals.ok} EPIs em dia`,
+      tone: metrics.compliance >= 90 ? "good" : "warn",
+    },
+    {
+      label: "Abertos",
+      value: String(metrics.openItems).padStart(2, "0"),
+      goal: `${metrics.openAudits} auditoria + ${metrics.epiTotals.soon + metrics.epiTotals.expired} EPI`,
+      tone: metrics.openItems ? "danger" : "good",
+    },
+  ];
+
+  indicatorRings.innerHTML = calculatedIndicators
     .map(
       (indicator) => `
         <article class="indicator-ring tone-${indicator.tone}">
@@ -669,18 +809,21 @@ function renderIndicators() {
     )
     .join("");
 
-  rankingList.innerHTML = ranking
-    .map(
-      (item, index) => `
-        <div>
-          <span>${index + 1}. ${item.name}</span>
-          <strong>${item.value}</strong>
-        </div>
-      `,
-    )
-    .join("");
+  const calculatedRanking = getCalculatedRanking();
+  rankingList.innerHTML = calculatedRanking.length
+    ? calculatedRanking
+        .map(
+          (item, index) => `
+            <div>
+              <span>${index + 1}. ${item.name}</span>
+              <strong>${item.value}</strong>
+            </div>
+          `,
+        )
+        .join("")
+    : `<div><span>Sem entregas cadastradas</span><strong>0</strong></div>`;
 
-  unitGrid.innerHTML = units
+  unitGrid.innerHTML = getCalculatedOrigins()
     .map(
       (unit) => `
         <div>
@@ -696,20 +839,12 @@ function renderIndicators() {
 function renderEpiRecords() {
   if (!epiRows) return;
 
-  const totals = epiRecords.reduce(
-    (acc, record) => {
-      const status = getEpiStatus(record);
-      if (status.level === "danger") acc.expired += 1;
-      else if (status.level === "warn") acc.soon += 1;
-      else acc.ok += 1;
-      return acc;
-    },
-    { ok: 0, soon: 0, expired: 0 },
-  );
+  const totals = getEpiTotals();
 
   if (epiOkCount) epiOkCount.textContent = totals.ok;
   if (epiSoonCount) epiSoonCount.textContent = totals.soon;
   if (epiExpiredCount) epiExpiredCount.textContent = totals.expired;
+  renderCalculatedMetrics();
 
   if (!epiRecords.length) {
     epiRows.innerHTML = `
@@ -824,6 +959,7 @@ epiForm?.addEventListener("submit", (event) => {
 
   saveEpiRecords();
   renderEpiRecords();
+  renderIndicators();
   epiForm.reset();
   setDefaultEpiDateTime();
 });
@@ -835,17 +971,21 @@ epiRows?.addEventListener("click", (event) => {
   epiRecords = epiRecords.filter((record) => record.id !== removeButton.dataset.epiRemove);
   saveEpiRecords();
   renderEpiRecords();
+  renderIndicators();
 });
 
 clearEpiRecords?.addEventListener("click", () => {
   epiRecords = [];
   saveEpiRecords();
   renderEpiRecords();
+  renderIndicators();
 });
 
 toggleResolved?.addEventListener("click", () => {
   showResolved = !showResolved;
   renderAudits();
+  renderIndicators();
+  renderCalculatedMetrics();
 });
 
 window.addEventListener("scroll", syncActiveNavigation, { passive: true });
@@ -854,10 +994,12 @@ renderModules();
 renderIntegrations();
 renderAudits();
 renderRoadmap();
+renderHighlights();
 renderCampaigns();
 renderIndicators();
 setDefaultEpiDateTime();
 renderEpiRecords();
+renderCalculatedMetrics();
 syncActiveNavigation();
 setupSidebar();
 setupHeroTilt();

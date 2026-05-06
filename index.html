@@ -40,6 +40,7 @@
           <a href="#modulos" class="nav-link" data-section="modulos">M&oacute;dulos</a>
           <a href="#integracoes" class="nav-link" data-section="integracoes">Integra&ccedil;&otilde;es</a>
           <a href="#epi" class="nav-link" data-section="epi">EPI</a>
+          <a href="#destaques" class="nav-link" data-section="destaques">Destaques</a>
           <a href="#campanhas" class="nav-link" data-section="campanhas">Campanhas</a>
           <a href="#indicadores" class="nav-link" data-section="indicadores">Indicadores</a>
           <a href="#auditoria" class="nav-link" data-section="auditoria">Auditoria</a>
@@ -49,10 +50,10 @@
         <div class="sidebar-card compliance-card">
           <div class="panel-label">Indicadores r&aacute;pidos</div>
           <div class="mini-metrics">
-            <div><strong>96,8%</strong><span>Conformidade</span></div>
-            <div><strong>142</strong><span>Inspe&ccedil;&otilde;es</span></div>
-            <div><strong>15</strong><span>Integra&ccedil;&otilde;es</span></div>
-            <div><strong>03</strong><span>Alertas</span></div>
+            <div><strong id="miniCompliance">0%</strong><span>Conformidade</span></div>
+            <div><strong id="miniRequests">0</strong><span>Requisi&ccedil;&otilde;es</span></div>
+            <div><strong id="miniIntegrations">0</strong><span>Integra&ccedil;&otilde;es</span></div>
+            <div><strong id="miniOpenItems">0</strong><span>Abertos</span></div>
           </div>
         </div>
 
@@ -122,7 +123,7 @@
 
               <div class="hero-card hero-card-bottom">
                 <span>Pronto para auditoria</span>
-                <strong>15</strong>
+                <strong id="heroIntegrationCount">0</strong>
                 <em>Integra&ccedil;&otilde;es e acessos cr&iacute;ticos organizados.</em>
               </div>
             </div>
@@ -132,23 +133,23 @@
         <section class="status-board" aria-label="Resumo operacional">
           <article class="status-tile tone-good">
             <span>Conformidade operacional</span>
-            <strong>96,8%</strong>
-            <em>Alta performance</em>
+            <strong id="statusCompliance">0%</strong>
+            <em id="statusComplianceLabel">Calculado</em>
           </article>
           <article class="status-tile">
-            <span>Inspe&ccedil;&otilde;es conclu&iacute;das</span>
-            <strong>142</strong>
-            <em>Ciclo em dia</em>
+            <span>Requisi&ccedil;&otilde;es registradas</span>
+            <strong id="statusRequests">0</strong>
+            <em id="statusRequestsLabel">Formularios e entregas</em>
           </article>
           <article class="status-tile tone-info">
             <span>Integra&ccedil;&otilde;es ativas</span>
-            <strong>15</strong>
+            <strong id="statusIntegrations">0</strong>
             <em>Consolidado</em>
           </article>
           <article class="status-tile tone-alert">
-            <span>Alertas cr&iacute;ticos</span>
-            <strong>03</strong>
-            <em>Prioridade</em>
+            <span>Itens em aberto</span>
+            <strong id="statusOpenItems">0</strong>
+            <em id="statusOpenLabel">Pendencias e vencimentos</em>
           </article>
         </section>
 
@@ -217,10 +218,10 @@
               <span>01. Tela inicial</span>
               <strong>Dashboard principal</strong>
               <div class="mini-dashboard">
-                <div><em>N3 no mes</em><b>142</b></div>
-                <div><em>DDS</em><b>97%</b></div>
-                <div><em>Conforme</em><b>Sim</b></div>
-                <div><em>Pendencias</em><b>03</b></div>
+                <div><em>Requisicoes</em><b id="blueprintRequests">0</b></div>
+                <div><em>Planilhas</em><b id="blueprintSheets">0</b></div>
+                <div><em>Conforme</em><b id="blueprintCompliant">Sim</b></div>
+                <div><em>Abertos</em><b id="blueprintOpenItems">0</b></div>
               </div>
               <p>Acessos rapidos, ultimos comunicados e leitura operacional imediata.</p>
             </article>
@@ -239,10 +240,10 @@
               <span>03. Indicadores</span>
               <strong>Modo TV</strong>
               <div class="indicator-preview">
-                <div><b>142</b><em>N3</em></div>
-                <div><b>97%</b><em>DDS</em></div>
-                <div><b>07</b><em>Trein.</em></div>
-                <div><b>03</b><em>RAC</em></div>
+                <div><b id="previewRequests">0</b><em>Req.</em></div>
+                <div><b id="previewCompliance">0%</b><em>Conf.</em></div>
+                <div><b id="previewSheets">0</b><em>Plan.</em></div>
+                <div><b id="previewOpenItems">0</b><em>Aberto</em></div>
               </div>
               <p>Metas, ranking N3, unidades e situacao do mes em uma tela executiva.</p>
             </article>
@@ -349,6 +350,18 @@
               </div>
             </a>
           </div>
+        </section>
+
+        <section class="section-block" id="destaques">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">Reconhecimento visual</span>
+              <h2>Destaques das categorias</h2>
+            </div>
+            <p>Espa&ccedil;o preparado para publicar as fotos do time, a&ccedil;&otilde;es de seguran&ccedil;a e resultados do m&ecirc;s.</p>
+          </div>
+
+          <div class="highlight-grid" id="highlightGrid"></div>
         </section>
 
         <section class="section-block" id="modulos">
@@ -500,13 +513,13 @@
             <div class="indicator-rings" id="indicatorRings"></div>
             <div class="ranking-card">
               <div class="ranking-header">
-                <span class="tag">Ranking N3</span>
-                <strong>Top 5 registros</strong>
+                <span class="tag">Ranking calculado</span>
+                <strong>Entregas de EPI por colaborador</strong>
               </div>
               <div class="ranking-list" id="rankingList"></div>
             </div>
             <div class="unit-card">
-              <span class="tag">Unidades</span>
+              <span class="tag">Origem dos acessos</span>
               <div class="unit-grid" id="unitGrid"></div>
             </div>
           </div>
