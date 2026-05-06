@@ -1,29 +1,29 @@
 const modules = [
   {
     tag: "Core",
-    title: "Segurança do Trabalho",
-    text: "Rotina operacional com inspeções, DDS, APR, bloqueio, EPI e suporte.",
-    items: ["Inspeção N3", "DDS", "Solicitação de EPI"],
+    titleHtml: "Seguranca do Trabalho",
+    textHtml: "Rotina operacional com inspecoes, DDS, APR, bloqueio, EPI e suporte em uma leitura mais direta.",
+    items: ["Inspecao N3", "DDS", "Solicitacao de EPI"],
     href: "#integracoes",
   },
   {
     tag: "Ambiental",
-    title: "Meio Ambiente",
-    text: "Frente para resíduos, descarte, 5S e conformidade ambiental.",
-    items: ["Evidências", "Planos de ação", "Rotinas de campo"],
+    titleHtml: "Meio Ambiente",
+    textHtml: "Frente para residuos, descarte, 5S e conformidade ambiental com espaco para evidencias e planos.",
+    items: ["Evidencias", "Planos de acao", "Rotinas de campo"],
     href: "#auditoria",
   },
   {
     tag: "Pessoas",
-    title: "Treinamentos",
-    text: "Gestão de integração, capacitação, validade e competências críticas.",
+    titleHtml: "Treinamentos",
+    textHtml: "Gestao de integracao, capacitacao, validade e competencias criticas em uma camada mais clara.",
     items: ["Matriz de treinamento", "Validades", "Reciclagens"],
     href: "#governanca",
   },
   {
-    tag: "Gestão",
-    title: "Indicadores e Governança",
-    text: "Camada executiva para auditoria, apresentação e tomada de decisão.",
+    tag: "Gestao",
+    titleHtml: "Indicadores e Governanca",
+    textHtml: "Camada executiva para auditoria, apresentacao e tomada de decisao com leitura visual mais premium.",
     items: ["KPIs", "BI", "Versionamento"],
     href: "#painel",
   },
@@ -32,83 +32,95 @@ const modules = [
 const integrations = [
   {
     title: "VES Vale",
-    description: "Solicitação institucional de acesso ao sistema VES.",
+    titleHtml: "VES Vale",
+    descriptionHtml: "Solicitacao institucional de acesso ao sistema VES com entrada direta pelo portal.",
     type: "Acesso",
     owner: "Vale",
     status: "Ativo",
     href: "https://vale-forms.valeglobal.net/public?id=%2FGCDd9v%2B3IvFnie%2F2yYRKg%3D%3D&lang=pt-BR",
+    searchText: "ves vale acesso formulario sistema institucional",
   },
   {
-    title: "Documentações SESMT",
-    description: "Biblioteca SharePoint com documentos institucionais da área.",
+    title: "Documentacoes SESMT",
+    titleHtml: "Documentacoes SESMT",
+    descriptionHtml: "Biblioteca SharePoint com os documentos institucionais da area e apoio a auditoria.",
     type: "Biblioteca",
     owner: "SESMT",
     status: "Ativo",
     href: "https://xcmgbrasilindustria.sharepoint.com/sites/SGI-DOCUMENTAOSESMTXCMG/Documentos%20Compartilhados/Forms/AllItems.aspx?viewid=8817a399%2D4028%2D4a45%2Db3fc%2D1c0176611a0e&as=json",
+    searchText: "documentacoes sesmt sharepoint biblioteca documentos institucional",
   },
   {
-    title: "Inspeção N3",
-    description: "Registro operacional das inspeções críticas da operação.",
-    type: "Formulário",
-    owner: "Segurança",
+    title: "Inspecao N3",
+    titleHtml: "Inspecao N3",
+    descriptionHtml: "Registro operacional das inspecoes criticas da operacao com leitura rapida.",
+    type: "Formulario",
+    owner: "Seguranca",
     status: "Ativo",
     href: "https://forms.office.com/r/uftekVRsSy?origin=lprLink",
+    searchText: "inspecao n3 formulario seguranca operacao registro",
   },
   {
     title: "DDS",
-    description: "Canal diário de comunicação preventiva e alinhamento.",
-    type: "Formulário",
-    owner: "Operação",
+    titleHtml: "DDS",
+    descriptionHtml: "Canal diario de comunicacao preventiva e alinhamento para rotina segura.",
+    type: "Formulario",
+    owner: "Operacao",
     status: "Ativo",
     href: "https://forms.office.com/r/tugrbGGgUu?origin=lprLink",
+    searchText: "dds formulario operacao comunicacao preventiva diario",
   },
   {
-    title: "Solicitação de EPI",
-    description: "Canal formal para requisições de equipamentos de proteção.",
-    type: "Formulário",
+    title: "Solicitacao de EPI",
+    titleHtml: "Solicitacao de EPI",
+    descriptionHtml: "Canal formal para requisicoes de equipamentos de protecao com entrada objetiva.",
+    type: "Formulario",
     owner: "SESMT",
     status: "Ativo",
     href: "https://forms.office.com/r/35NYBAHrab?origin=lprLink",
+    searchText: "epi formulario solicitacao sesmt requisicao equipamentos",
   },
   {
-    title: "WhatsApp Segurança",
-    description: "Contato rápido com a equipe de apoio da segurança.",
+    title: "WhatsApp Seguranca",
+    titleHtml: "WhatsApp Seguranca",
+    descriptionHtml: "Contato rapido com a equipe de apoio para destravar duvidas e atendimento.",
     type: "Suporte",
-    owner: "Segurança",
+    owner: "Seguranca",
     status: "Ativo",
     href: "https://wa.me/5531971840458?text=Ol%C3%A1%2C%20preciso%20de%20apoio%20na%20gest%C3%A3o%20de%20seguran%C3%A7a.",
+    searchText: "whatsapp seguranca suporte contato apoio atendimento",
   },
 ];
 
 const audits = [
   {
-    item: "Atualizar biblioteca oficial de procedimentos",
-    origin: "SESMT Docs",
-    owner: "Coordenação SGI",
+    itemHtml: "Atualizar biblioteca oficial de procedimentos",
+    originHtml: "SESMT Docs",
+    ownerHtml: "Coordenacao SGI",
     due: "10/05/2026",
     status: "Em andamento",
     level: "warn",
   },
   {
-    item: "Validar evidências das inspeções N3",
-    origin: "Inspeção N3",
-    owner: "Técnico de segurança",
+    itemHtml: "Validar evidencias das inspecoes N3",
+    originHtml: "Inspecao N3",
+    ownerHtml: "Tecnico de seguranca",
     due: "08/05/2026",
     status: "Prioridade",
     level: "danger",
   },
   {
-    item: "Consolidar indicadores para reunião executiva",
-    origin: "Painel SGI",
-    owner: "Analista SGI",
+    itemHtml: "Consolidar indicadores para reuniao executiva",
+    originHtml: "Painel SGI",
+    ownerHtml: "Analista SGI",
     due: "12/05/2026",
     status: "Em andamento",
     level: "warn",
   },
   {
-    item: "Revisar canal de solicitação de EPI",
-    origin: "Formulário EPI",
-    owner: "Almoxarifado + SESMT",
+    itemHtml: "Revisar canal de solicitacao de EPI",
+    originHtml: "Formulario EPI",
+    ownerHtml: "Almoxarifado + SESMT",
     due: "06/05/2026",
     status: "Resolvido",
     level: "ok",
@@ -116,10 +128,34 @@ const audits = [
 ];
 
 const roadmap = [
-  ["1", "Validação visual", "Conceito premium e postura institucional", "Pronto", "ok"],
-  ["2", "Dados reais", "Números, responsáveis e conteúdos oficiais", "Próxima fase", "warn"],
-  ["3", "Publicação", "Hospedagem e ambiente oficial", "Planejado", "warn"],
-  ["4", "Expansão", "BI, biblioteca, permissões e novos módulos", "Escalável", "ok"],
+  {
+    number: "1",
+    titleHtml: "Validacao visual",
+    textHtml: "Interface premium, mais clara e mais consistente para uso diario e institucional.",
+    status: "Pronto",
+    level: "ok",
+  },
+  {
+    number: "2",
+    titleHtml: "Dados reais",
+    textHtml: "Aprofundar numeros, responsaveis, regras de atualizacao e conteudo oficial.",
+    status: "Proxima fase",
+    level: "warn",
+  },
+  {
+    number: "3",
+    titleHtml: "Publicacao",
+    textHtml: "Hospedagem, ambiente oficial, governanca de acesso e rotina de manutencao.",
+    status: "Planejado",
+    level: "warn",
+  },
+  {
+    number: "4",
+    titleHtml: "Expansao",
+    textHtml: "BI, biblioteca, permissoes e novos modulos na mesma estrutura visual.",
+    status: "Escalavel",
+    level: "ok",
+  },
 ];
 
 const moduleGrid = document.querySelector("#moduleGrid");
@@ -128,81 +164,116 @@ const auditRows = document.querySelector("#auditRows");
 const roadmapNode = document.querySelector("#roadmap");
 const searchInput = document.querySelector("#integrationSearch");
 const toggleResolved = document.querySelector("#toggleResolved");
+const navToggle = document.querySelector("#navToggle");
+const sidebarClose = document.querySelector("#sidebarClose");
+const sidebarOverlay = document.querySelector("#sidebarOverlay");
+const sidebar = document.querySelector("#sidebar");
+const heroMedia = document.querySelector(".hero-media");
 let showResolved = true;
 
 function statusClass(status) {
-  if (status === "Ativo" || status === "Pronto" || status === "Escalável" || status === "Resolvido") return "ok";
+  if (["Ativo", "Pronto", "Escalavel", "Resolvido"].includes(status)) return "ok";
   if (status === "Prioridade") return "danger";
   return "warn";
 }
 
 function renderModules() {
-  moduleGrid.innerHTML = modules.map((module) => `
-    <article class="module-card">
-      <span class="tag">${module.tag}</span>
-      <h3>${module.title}</h3>
-      <p>${module.text}</p>
-      <ul>${module.items.map((item) => `<li>${item}</li>`).join("")}</ul>
-      <a class="button neutral" href="${module.href}">Abrir módulo</a>
-    </article>
-  `).join("");
+  moduleGrid.innerHTML = modules
+    .map(
+      (module) => `
+        <article class="module-card">
+          <span class="tag">${module.tag}</span>
+          <h3>${module.titleHtml}</h3>
+          <p>${module.textHtml}</p>
+          <ul class="module-list">
+            ${module.items.map((item) => `<li>${item}</li>`).join("")}
+          </ul>
+          <a class="button neutral has-arrow" href="${module.href}"><span>Abrir modulo</span></a>
+        </article>
+      `,
+    )
+    .join("");
 }
 
 function renderIntegrations(filter = "") {
   const term = filter.trim().toLowerCase();
-  const filtered = integrations.filter((item) => {
-    return [item.title, item.description, item.type, item.owner].join(" ").toLowerCase().includes(term);
-  });
+  const filtered = integrations.filter((item) =>
+    [item.title, item.descriptionHtml, item.type, item.owner, item.searchText].join(" ").toLowerCase().includes(term),
+  );
 
-  integrationGrid.innerHTML = filtered.map((item) => `
-    <article class="integration-card">
-      <div>
-        <h3>${item.title}</h3>
-        <p>${item.description}</p>
-      </div>
-      <div class="card-meta">
-        <span>${item.type}</span>
-        <span>${item.owner}</span>
-        <span class="status-pill ${statusClass(item.status)}">${item.status}</span>
-      </div>
-      <a class="button primary" href="${item.href}" target="_blank" rel="noreferrer">Abrir</a>
-    </article>
-  `).join("");
+  if (!filtered.length) {
+    integrationGrid.innerHTML = `
+      <article class="integration-empty">
+        Nenhuma integracao encontrada para a busca atual. Tente outro termo como VES, DDS ou EPI.
+      </article>
+    `;
+    return;
+  }
+
+  integrationGrid.innerHTML = filtered
+    .map(
+      (item) => `
+        <article class="integration-card">
+          <div class="integration-card-header">
+            <div>
+              <h3>${item.titleHtml}</h3>
+              <p>${item.descriptionHtml}</p>
+            </div>
+            <span class="status-pill ${statusClass(item.status)}">${item.status}</span>
+          </div>
+          <div class="card-meta">
+            <span>${item.type}</span>
+            <span>${item.owner}</span>
+          </div>
+          <a class="button primary has-arrow" href="${item.href}" target="_blank" rel="noreferrer"><span>Abrir</span></a>
+        </article>
+      `,
+    )
+    .join("");
 }
 
 function renderAudits() {
   const rows = audits.filter((audit) => showResolved || audit.status !== "Resolvido");
-  auditRows.innerHTML = rows.map((audit) => `
-    <tr>
-      <td>${audit.item}</td>
-      <td>${audit.origin}</td>
-      <td>${audit.owner}</td>
-      <td>${audit.due}</td>
-      <td><span class="status-pill ${audit.level}">${audit.status}</span></td>
-    </tr>
-  `).join("");
-  toggleResolved.textContent = showResolved ? "Ocultar resolvidos" : "Mostrar resolvidos";
+  auditRows.innerHTML = rows
+    .map(
+      (audit) => `
+        <tr>
+          <td>${audit.itemHtml}</td>
+          <td>${audit.originHtml}</td>
+          <td>${audit.ownerHtml}</td>
+          <td>${audit.due}</td>
+          <td><span class="status-pill ${audit.level}">${audit.status}</span></td>
+        </tr>
+      `,
+    )
+    .join("");
+
+  toggleResolved.innerHTML = `<span>${showResolved ? "Ocultar resolvidos" : "Mostrar resolvidos"}</span>`;
 }
 
 function renderRoadmap() {
-  roadmapNode.innerHTML = roadmap.map(([number, title, text, status, level]) => `
-    <div class="roadmap-step">
-      <div class="step-number">${number}</div>
-      <div>
-        <strong>${title}</strong>
-        <span>${text}</span>
-      </div>
-      <span class="status-pill ${level}">${status}</span>
-    </div>
-  `).join("");
+  roadmapNode.innerHTML = roadmap
+    .map(
+      (step) => `
+        <div class="roadmap-step">
+          <div class="step-number">${step.number}</div>
+          <div>
+            <strong>${step.titleHtml}</strong>
+            <span>${step.textHtml}</span>
+          </div>
+          <span class="status-pill ${step.level}">${step.status}</span>
+        </div>
+      `,
+    )
+    .join("");
 }
 
 function syncActiveNavigation() {
-  const sections = [...document.querySelectorAll(".section-block")];
+  const sections = [...document.querySelectorAll(".section-block[id]")];
   const links = [...document.querySelectorAll(".nav-link")];
   const current = sections.reduce((active, section) => {
     const rect = section.getBoundingClientRect();
-    return rect.top <= 150 ? section.id : active;
+    return rect.top <= 170 ? section.id : active;
   }, "painel");
 
   links.forEach((link) => {
@@ -210,11 +281,72 @@ function syncActiveNavigation() {
   });
 }
 
-searchInput.addEventListener("input", (event) => renderIntegrations(event.target.value));
-toggleResolved.addEventListener("click", () => {
+function setSidebarState(isOpen) {
+  document.body.classList.toggle("nav-open", isOpen);
+  navToggle?.setAttribute("aria-expanded", String(isOpen));
+}
+
+function handleViewportReset() {
+  if (window.innerWidth > 1080) {
+    setSidebarState(false);
+  }
+}
+
+function setupSidebar() {
+  navToggle?.addEventListener("click", () => {
+    const shouldOpen = !document.body.classList.contains("nav-open");
+    setSidebarState(shouldOpen);
+  });
+
+  sidebarClose?.addEventListener("click", () => setSidebarState(false));
+  sidebarOverlay?.addEventListener("click", () => setSidebarState(false));
+
+  document.querySelectorAll(".nav-link").forEach((link) => {
+    link.addEventListener("click", () => {
+      if (window.innerWidth <= 1080) {
+        setSidebarState(false);
+      }
+    });
+  });
+
+  window.addEventListener("resize", handleViewportReset);
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      setSidebarState(false);
+    }
+  });
+}
+
+function setupHeroTilt() {
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  if (!heroMedia || prefersReducedMotion || !canHover) {
+    return;
+  }
+
+  heroMedia.addEventListener("pointermove", (event) => {
+    const rect = heroMedia.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+    heroMedia.style.setProperty("--hero-rotate-x", `${(y * -6).toFixed(2)}deg`);
+    heroMedia.style.setProperty("--hero-rotate-y", `${(x * 8).toFixed(2)}deg`);
+  });
+
+  heroMedia.addEventListener("pointerleave", () => {
+    heroMedia.style.setProperty("--hero-rotate-x", "0deg");
+    heroMedia.style.setProperty("--hero-rotate-y", "0deg");
+  });
+}
+
+searchInput?.addEventListener("input", (event) => renderIntegrations(event.target.value));
+
+toggleResolved?.addEventListener("click", () => {
   showResolved = !showResolved;
   renderAudits();
 });
+
 window.addEventListener("scroll", syncActiveNavigation, { passive: true });
 
 renderModules();
@@ -222,3 +354,5 @@ renderIntegrations();
 renderAudits();
 renderRoadmap();
 syncActiveNavigation();
+setupSidebar();
+setupHeroTilt();
