@@ -7,25 +7,39 @@ const modules = [
     href: "#integracoes",
   },
   {
-    tag: "Ambiental",
-    titleHtml: "Meio Ambiente",
-    textHtml: "Frente para resíduos, descarte, 5S e conformidade ambiental.",
-    items: ["Evidências", "Planos de ação", "Rotinas de campo"],
-    href: "#auditoria",
+    tag: "Comunicacao",
+    titleHtml: "Campanhas e Comunicados",
+    textHtml: "Destaques do mes, comunicados recentes e materiais para engajamento em campo.",
+    items: ["Campanha do mes", "Comunicados", "Materiais de apoio"],
+    href: "#campanhas",
   },
   {
-    tag: "Pessoas",
-    titleHtml: "Treinamentos",
-    textHtml: "Gestão de integração, capacitação, validade e competências críticas.",
-    items: ["Matriz de treinamento", "Validades", "Reciclagens"],
-    href: "#governanca",
+    tag: "Midia",
+    titleHtml: "Videos, Treinamentos e DDS",
+    textHtml: "Conteudos audiovisuais para abertura, reciclagem, DDS e liberacoes criticas.",
+    items: ["Videos em destaque", "Treinamentos", "DDS orientado"],
+    href: "#campanhas",
   },
   {
     tag: "Gestao",
-    titleHtml: "Indicadores e Governança",
-    textHtml: "Camada executiva para auditoria, apresentação e tomada de decisão.",
-    items: ["KPIs", "BI", "Versionamento"],
-    href: "#painel",
+    titleHtml: "Indicadores e Performance",
+    textHtml: "Camada executiva para metas, ranking, unidades e tomada de decisao.",
+    items: ["KPIs", "Ranking N3", "Unidades"],
+    href: "#indicadores",
+  },
+  {
+    tag: "Documentos",
+    titleHtml: "Biblioteca SESMT",
+    textHtml: "Procedimentos, evidencias, formularios e documentos oficiais do SGI.",
+    items: ["SharePoint", "Procedimentos", "Evidencias"],
+    href: "#integracoes",
+  },
+  {
+    tag: "Auditoria",
+    titleHtml: "Pendencias e Evidencias",
+    textHtml: "Fila de acoes, responsaveis, prazos e status para acompanhamento de auditoria.",
+    items: ["Plano de acao", "Prazos", "Responsaveis"],
+    href: "#auditoria",
   },
 ];
 
@@ -217,6 +231,68 @@ const audits = [
   },
 ];
 
+const campaigns = [
+  {
+    titleHtml: "Treinamento Trabalho em Altura",
+    textHtml: "Reciclagem obrigatoria para frentes com liberacao critica.",
+    date: "06/05/2026",
+    status: "Publicado",
+    level: "ok",
+  },
+  {
+    titleHtml: "DDS Especial - Seguranca nas Maos",
+    textHtml: "Conteudo rapido para alinhamento antes da atividade.",
+    date: "05/05/2026",
+    status: "Destaque",
+    level: "warn",
+  },
+  {
+    titleHtml: "Nova atualizacao de procedimentos",
+    textHtml: "Documentos oficiais revisados para consulta SESMT.",
+    date: "04/05/2026",
+    status: "Revisado",
+    level: "ok",
+  },
+];
+
+const mediaItems = [
+  {
+    titleHtml: "DDS - Seguranca nas Maos",
+    textHtml: "Video curto para reforco comportamental em campo.",
+    meta: "Duracao: 02:35",
+  },
+  {
+    titleHtml: "Bloqueio e Etiquetagem",
+    textHtml: "Liberacao critica para atividades com energia perigosa.",
+    meta: "Duracao: 05:10",
+  },
+  {
+    titleHtml: "Trabalho em Altura - Reciclagem",
+    textHtml: "Trilha com vencimento acompanhado pelo SGI.",
+    meta: "Progresso medio: 65%",
+  },
+];
+
+const indicators = [
+  { label: "N3 no mes", value: "142", goal: "Meta 150", tone: "good" },
+  { label: "DDS realizados", value: "97%", goal: "Meta 95%", tone: "info" },
+  { label: "Treinamentos", value: "07", goal: "Vencendo no mes", tone: "warn" },
+  { label: "Pendencias", value: "03", goal: "Prioridade RAC", tone: "danger" },
+];
+
+const ranking = [
+  { name: "Joao Silva", value: "28" },
+  { name: "Pedro Santos", value: "24" },
+  { name: "Carlos Lima", value: "18" },
+  { name: "Rafael Costa", value: "15" },
+  { name: "Lucas Martins", value: "12" },
+];
+
+const units = [
+  { name: "Brucutu", value: "78", detail: "Registros N3" },
+  { name: "Itabira", value: "70", detail: "Registros N3" },
+];
+
 const roadmap = [
   {
     number: "1",
@@ -252,6 +328,11 @@ const moduleGrid = document.querySelector("#moduleGrid");
 const integrationGrid = document.querySelector("#integrationGrid");
 const auditRows = document.querySelector("#auditRows");
 const roadmapNode = document.querySelector("#roadmap");
+const campaignList = document.querySelector("#campaignList");
+const mediaList = document.querySelector("#mediaList");
+const indicatorRings = document.querySelector("#indicatorRings");
+const rankingList = document.querySelector("#rankingList");
+const unitGrid = document.querySelector("#unitGrid");
 const searchInput = document.querySelector("#integrationSearch");
 const toggleResolved = document.querySelector("#toggleResolved");
 const navToggle = document.querySelector("#navToggle");
@@ -259,12 +340,20 @@ const sidebarClose = document.querySelector("#sidebarClose");
 const sidebarOverlay = document.querySelector("#sidebarOverlay");
 const sidebar = document.querySelector("#sidebar");
 const heroMedia = document.querySelector(".hero-media");
+const formModal = document.querySelector("#formModal");
+const formModalTitle = document.querySelector("#formModalTitle");
+const formFrame = document.querySelector("#formFrame");
+const formExternalLink = document.querySelector("#formExternalLink");
 let showResolved = true;
 
 function statusClass(status) {
   if (["Ativo", "Pronto", "Escalável", "Resolvido"].includes(status)) return "ok";
   if (status === "Prioridade") return "danger";
   return "warn";
+}
+
+function shouldEmbedIntegration(item) {
+  return ["Acesso", "Comunicado", "Formulario", "Formulário"].includes(item.type);
 }
 
 function renderModules() {
@@ -287,9 +376,11 @@ function renderModules() {
 
 function renderIntegrations(filter = "") {
   const term = filter.trim().toLowerCase();
-  const filtered = integrations.filter((item) =>
-    [item.title, item.descriptionHtml, item.type, item.owner, item.searchText].join(" ").toLowerCase().includes(term),
-  );
+  const filtered = integrations
+    .map((item, index) => ({ ...item, index }))
+    .filter((item) =>
+      [item.title, item.descriptionHtml, item.type, item.owner, item.searchText].join(" ").toLowerCase().includes(term),
+    );
 
   if (!filtered.length) {
     integrationGrid.innerHTML = `
@@ -315,11 +406,37 @@ function renderIntegrations(filter = "") {
             <span>${item.type}</span>
             <span>${item.owner}</span>
           </div>
-          <a class="button primary has-arrow" href="${item.href}" target="_blank" rel="noreferrer"><span>Abrir</span></a>
+          ${
+            shouldEmbedIntegration(item)
+              ? `<button class="button primary has-arrow" type="button" data-integration-index="${item.index}"><span>Preencher</span></button>`
+              : `<a class="button primary has-arrow" href="${item.href}" target="_blank" rel="noreferrer"><span>Abrir</span></a>`
+          }
         </article>
       `,
     )
     .join("");
+}
+
+function openEmbeddedIntegration(item) {
+  if (!formModal || !formModalTitle || !formFrame || !formExternalLink) {
+    window.open(item.href, "_blank", "noopener,noreferrer");
+    return;
+  }
+
+  formModalTitle.textContent = item.title;
+  formExternalLink.href = item.href;
+  formFrame.src = item.href;
+  formFrame.title = item.title;
+  formModal.hidden = false;
+  document.body.classList.add("modal-open");
+}
+
+function closeEmbeddedIntegration() {
+  if (!formModal || !formFrame) return;
+
+  formModal.hidden = true;
+  formFrame.src = "about:blank";
+  document.body.classList.remove("modal-open");
 }
 
 function renderAudits() {
@@ -403,8 +520,84 @@ function setupSidebar() {
   window.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       setSidebarState(false);
+      closeEmbeddedIntegration();
     }
   });
+}
+
+function renderCampaigns() {
+  if (!campaignList || !mediaList) return;
+
+  campaignList.innerHTML = campaigns
+    .map(
+      (campaign) => `
+        <article class="campaign-item">
+          <div>
+            <strong>${campaign.titleHtml}</strong>
+            <span>${campaign.textHtml}</span>
+          </div>
+          <div class="campaign-item-footer">
+            <em>${campaign.date}</em>
+            <span class="status-pill ${campaign.level}">${campaign.status}</span>
+          </div>
+        </article>
+      `,
+    )
+    .join("");
+
+  mediaList.innerHTML = mediaItems
+    .map(
+      (item) => `
+        <article class="media-item">
+          <div class="play-mark" aria-hidden="true"></div>
+          <div>
+            <strong>${item.titleHtml}</strong>
+            <span>${item.textHtml}</span>
+            <em>${item.meta}</em>
+          </div>
+        </article>
+      `,
+    )
+    .join("");
+}
+
+function renderIndicators() {
+  if (!indicatorRings || !rankingList || !unitGrid) return;
+
+  indicatorRings.innerHTML = indicators
+    .map(
+      (indicator) => `
+        <article class="indicator-ring tone-${indicator.tone}">
+          <span>${indicator.label}</span>
+          <strong>${indicator.value}</strong>
+          <em>${indicator.goal}</em>
+        </article>
+      `,
+    )
+    .join("");
+
+  rankingList.innerHTML = ranking
+    .map(
+      (item, index) => `
+        <div>
+          <span>${index + 1}. ${item.name}</span>
+          <strong>${item.value}</strong>
+        </div>
+      `,
+    )
+    .join("");
+
+  unitGrid.innerHTML = units
+    .map(
+      (unit) => `
+        <div>
+          <span>${unit.name}</span>
+          <strong>${unit.value}</strong>
+          <em>${unit.detail}</em>
+        </div>
+      `,
+    )
+    .join("");
 }
 
 function setupHeroTilt() {
@@ -432,6 +625,31 @@ function setupHeroTilt() {
 
 searchInput?.addEventListener("input", (event) => renderIntegrations(event.target.value));
 
+integrationGrid?.addEventListener("click", (event) => {
+  const trigger = event.target.closest("[data-integration-index]");
+  if (!trigger) return;
+
+  const item = integrations[Number(trigger.dataset.integrationIndex)];
+  if (item) {
+    openEmbeddedIntegration(item);
+  }
+});
+
+document.querySelectorAll("[data-form-close]").forEach((button) => {
+  button.addEventListener("click", closeEmbeddedIntegration);
+});
+
+document.addEventListener("click", (event) => {
+  const link = event.target.closest("a[href]");
+  if (!link || link === formExternalLink) return;
+
+  const item = integrations.find((integration) => integration.href === link.href && shouldEmbedIntegration(integration));
+  if (!item) return;
+
+  event.preventDefault();
+  openEmbeddedIntegration(item);
+});
+
 toggleResolved?.addEventListener("click", () => {
   showResolved = !showResolved;
   renderAudits();
@@ -443,6 +661,8 @@ renderModules();
 renderIntegrations();
 renderAudits();
 renderRoadmap();
+renderCampaigns();
+renderIndicators();
 syncActiveNavigation();
 setupSidebar();
 setupHeroTilt();

@@ -38,6 +38,8 @@
           <a href="#painel" class="nav-link active" data-section="painel">Painel</a>
           <a href="#modulos" class="nav-link" data-section="modulos">M&oacute;dulos</a>
           <a href="#integracoes" class="nav-link" data-section="integracoes">Integra&ccedil;&otilde;es</a>
+          <a href="#campanhas" class="nav-link" data-section="campanhas">Campanhas</a>
+          <a href="#indicadores" class="nav-link" data-section="indicadores">Indicadores</a>
           <a href="#auditoria" class="nav-link" data-section="auditoria">Auditoria</a>
           <a href="#governanca" class="nav-link" data-section="governanca">Governan&ccedil;a</a>
         </nav>
@@ -148,6 +150,39 @@
           </article>
         </section>
 
+        <section class="section-block executive-panel" aria-label="Visao executiva SGI">
+          <div class="executive-highlight">
+            <span class="eyebrow">Destaque do mes</span>
+            <h2>Maio Amarelo: seguranca no transito tambem e prioridade operacional.</h2>
+            <p>
+              Comunicacao centralizada para reforcar comportamento seguro, reduzir desvios e conectar lideranca,
+              campo e contratadas em uma mesma rotina preventiva.
+            </p>
+            <div class="highlight-actions">
+              <a class="button primary has-arrow" href="#campanhas"><span>Ver campanha</span></a>
+              <a class="button neutral has-arrow" href="#indicadores"><span>Ver indicadores</span></a>
+            </div>
+          </div>
+
+          <div class="executive-summary" aria-label="Resumo para diretoria">
+            <div>
+              <span>Meta N3</span>
+              <strong>150</strong>
+              <em>142 registros realizados</em>
+            </div>
+            <div>
+              <span>DDS realizados</span>
+              <strong>97%</strong>
+              <em>Ciclo mensal validado</em>
+            </div>
+            <div>
+              <span>Treinamentos</span>
+              <strong>07</strong>
+              <em>Vencimentos monitorados</em>
+            </div>
+          </div>
+        </section>
+
         <section class="section-block quick-access-panel" aria-label="Acessos cr&iacute;ticos">
           <div class="quick-access">
             <a href="https://vale-forms.valeglobal.net/public?id=%2FGCDd9v%2B3IvFnie%2F2yYRKg%3D%3D&lang=pt-BR" target="_blank" rel="noreferrer">
@@ -218,6 +253,57 @@
           <div class="integration-grid" id="integrationGrid"></div>
         </section>
 
+        <section class="section-block" id="campanhas">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">Comunicacao audiovisual</span>
+              <h2>Comunicados, campanhas e treinamentos</h2>
+            </div>
+            <p>Destaques visuais para engajar a operacao sem sobrecarregar a navegacao.</p>
+          </div>
+
+          <div class="campaign-layout">
+            <article class="campaign-feature">
+              <span class="tag">Campanha do mes</span>
+              <h3>Maio Amarelo</h3>
+              <p>No transito, escolha a vida. Material preparado para TV, DDS e comunicacao de campo.</p>
+              <div class="campaign-meta">
+                <span>Transito seguro</span>
+                <span>Prevencao</span>
+                <span>Operacao</span>
+              </div>
+            </article>
+
+            <div class="campaign-list" id="campaignList"></div>
+            <div class="media-list" id="mediaList"></div>
+          </div>
+        </section>
+
+        <section class="section-block" id="indicadores">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">Informacao em tempo real</span>
+              <h2>Indicadores operacionais</h2>
+            </div>
+            <p>Leitura gerencial com metas, ranking e situacao por frente de trabalho.</p>
+          </div>
+
+          <div class="indicator-layout">
+            <div class="indicator-rings" id="indicatorRings"></div>
+            <div class="ranking-card">
+              <div class="ranking-header">
+                <span class="tag">Ranking N3</span>
+                <strong>Top 5 registros</strong>
+              </div>
+              <div class="ranking-list" id="rankingList"></div>
+            </div>
+            <div class="unit-card">
+              <span class="tag">Unidades</span>
+              <div class="unit-grid" id="unitGrid"></div>
+            </div>
+          </div>
+        </section>
+
         <section class="section-block" id="auditoria">
           <div class="section-heading">
             <div>
@@ -275,6 +361,29 @@
           </div>
         </section>
       </main>
+    </div>
+
+    <div class="form-modal" id="formModal" role="dialog" aria-modal="true" aria-labelledby="formModalTitle" hidden>
+      <div class="form-modal-backdrop" data-form-close></div>
+      <div class="form-modal-panel">
+        <div class="form-modal-header">
+          <div>
+            <span class="eyebrow">Preenchimento interno</span>
+            <h2 id="formModalTitle">Formulario</h2>
+          </div>
+          <div class="form-modal-actions">
+            <a class="button neutral has-arrow" id="formExternalLink" href="#" target="_blank" rel="noreferrer">
+              <span>Nova aba</span>
+            </a>
+            <button class="button neutral" type="button" data-form-close>
+              <span>Fechar</span>
+            </button>
+          </div>
+        </div>
+        <div class="form-modal-frame-wrap">
+          <iframe id="formFrame" title="Formulario incorporado" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        </div>
+      </div>
     </div>
 
     <script src="./app.js"></script>
