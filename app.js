@@ -35,6 +35,13 @@ const modules = [
     href: "#integracoes",
   },
   {
+    tag: "EPI",
+    titleHtml: "Ficha de EPI Integrada",
+    textHtml: "Controle de entrega, validade, vencimento e rastreabilidade por colaborador.",
+    items: ["Entrega", "Validade", "Alertas de vencimento"],
+    href: "#epi",
+  },
+  {
     tag: "Auditoria",
     titleHtml: "Pendencias e Evidencias",
     textHtml: "Fila de acoes, responsaveis, prazos e status para acompanhamento de auditoria.",
@@ -293,6 +300,43 @@ const units = [
   { name: "Itabira", value: "70", detail: "Registros N3" },
 ];
 
+const epiStorageKey = "sgiEpiRecords";
+const defaultEpiRecords = [
+  {
+    id: "epi-1",
+    employee: "Joao Silva",
+    registration: "XCMG-1024",
+    item: "Capacete com jugular",
+    code: "CA 498",
+    deliveredAt: "2026-04-12T08:30",
+    validityDays: 180,
+    quantity: 1,
+    notes: "Entrega inicial",
+  },
+  {
+    id: "epi-2",
+    employee: "Pedro Santos",
+    registration: "XCMG-1170",
+    item: "Luva anticorte",
+    code: "CA 32035",
+    deliveredAt: "2025-11-20T14:10",
+    validityDays: 180,
+    quantity: 2,
+    notes: "Reposicao",
+  },
+  {
+    id: "epi-3",
+    employee: "Carlos Lima",
+    registration: "XCMG-0988",
+    item: "Oculos de protecao",
+    code: "CA 10344",
+    deliveredAt: "2026-02-03T09:00",
+    validityDays: 120,
+    quantity: 1,
+    notes: "Rotina de campo",
+  },
+];
+
 const roadmap = [
   {
     number: "1",
@@ -333,6 +377,13 @@ const mediaList = document.querySelector("#mediaList");
 const indicatorRings = document.querySelector("#indicatorRings");
 const rankingList = document.querySelector("#rankingList");
 const unitGrid = document.querySelector("#unitGrid");
+const epiForm = document.querySelector("#epiForm");
+const epiRows = document.querySelector("#epiRows");
+const clearEpiRecords = document.querySelector("#clearEpiRecords");
+const epiDeliveredAt = document.querySelector("#epiDeliveredAt");
+const epiOkCount = document.querySelector("#epiOkCount");
+const epiSoonCount = document.querySelector("#epiSoonCount");
+const epiExpiredCount = document.querySelector("#epiExpiredCount");
 const searchInput = document.querySelector("#integrationSearch");
 const toggleResolved = document.querySelector("#toggleResolved");
 const navToggle = document.querySelector("#navToggle");
@@ -345,6 +396,7 @@ const formModalTitle = document.querySelector("#formModalTitle");
 const formFrame = document.querySelector("#formFrame");
 const formExternalLink = document.querySelector("#formExternalLink");
 let showResolved = true;
+let epiRecords = loadEpiRecords();
 
 function statusClass(status) {
   if (["Ativo", "Pronto", "Escalável", "Resolvido"].includes(status)) return "ok";
@@ -354,6 +406,47 @@ function statusClass(status) {
 
 function shouldEmbedIntegration(item) {
   return ["Acesso", "Comunicado", "Formulario", "Formulário"].includes(item.type);
+}
+
+function loadEpiRecords() {
+  try {
+    const stored = localStorage.getItem(epiStorageKey);
+    return stored ? JSON.parse(stored) : [...defaultEpiRecords];
+  } catch (error) {
+    return [...defaultEpiRecords];
+  }
+}
+
+function saveEpiRecords() {
+  localStorage.setItem(epiStorageKey, JSON.stringify(epiRecords));
+}
+
+function addDays(dateValue, days) {
+  const date = new Date(dateValue);
+  date.setDate(date.getDate() + Number(days || 0));
+  return date;
+}
+
+function formatDateTime(dateValue) {
+  return new Intl.DateTimeFormat("pt-BR", {
+    dateStyle: "short",
+    timeStyle: "short",
+  }).format(new Date(dateValue));
+}
+
+function getEpiStatus(record) {
+  const expiresAt = addDays(record.deliveredAt, record.validityDays);
+  const diffDays = Math.ceil((expiresAt - new Date()) / 86400000);
+
+  if (diffDays < 0) {
+    return { label: `Vencido ha ${Math.abs(diffDays)} dia(s)`, level: "danger", diffDays, expiresAt };
+  }
+
+  if (diffDays <= 30) {
+    return { label: `Vence em ${diffDays} dia(s)`, level: "warn", diffDays, expiresAt };
+  }
+
+  return { label: `Em dia: ${diffDays} dia(s)`, level: "ok", diffDays, expiresAt };
 }
 
 function renderModules() {
@@ -600,6 +693,66 @@ function renderIndicators() {
     .join("");
 }
 
+function renderEpiRecords() {
+  if (!epiRows) return;
+
+  const totals = epiRecords.reduce(
+    (acc, record) => {
+      const status = getEpiStatus(record);
+      if (status.level === "danger") acc.expired += 1;
+      else if (status.level === "warn") acc.soon += 1;
+      else acc.ok += 1;
+      return acc;
+    },
+    { ok: 0, soon: 0, expired: 0 },
+  );
+
+  if (epiOkCount) epiOkCount.textContent = totals.ok;
+  if (epiSoonCount) epiSoonCount.textContent = totals.soon;
+  if (epiExpiredCount) epiExpiredCount.textContent = totals.expired;
+
+  if (!epiRecords.length) {
+    epiRows.innerHTML = `
+      <tr>
+        <td colspan="7">Nenhuma entrega de EPI cadastrada.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  epiRows.innerHTML = epiRecords
+    .map((record) => {
+      const status = getEpiStatus(record);
+      return `
+        <tr>
+          <td>
+            <strong>${record.employee}</strong>
+            <span>${record.registration || "Sem matricula"}</span>
+          </td>
+          <td>
+            <strong>${record.item}</strong>
+            <span>${record.code || "Sem CA"} | Qtd. ${record.quantity || 1}</span>
+          </td>
+          <td>${formatDateTime(record.deliveredAt)}</td>
+          <td>${record.validityDays} dias</td>
+          <td>${formatDateTime(status.expiresAt)}</td>
+          <td><span class="status-pill ${status.level}">${status.label}</span></td>
+          <td>
+            <button class="table-action" type="button" data-epi-remove="${record.id}">Remover</button>
+          </td>
+        </tr>
+      `;
+    })
+    .join("");
+}
+
+function setDefaultEpiDateTime() {
+  if (!epiDeliveredAt || epiDeliveredAt.value) return;
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  epiDeliveredAt.value = now.toISOString().slice(0, 16);
+}
+
 function setupHeroTilt() {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -650,6 +803,46 @@ document.addEventListener("click", (event) => {
   openEmbeddedIntegration(item);
 });
 
+epiForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const formData = new FormData(epiForm);
+
+  epiRecords = [
+    {
+      id: `epi-${Date.now()}`,
+      employee: String(formData.get("employee") || "").trim(),
+      registration: String(formData.get("registration") || "").trim(),
+      item: String(formData.get("item") || "").trim(),
+      code: String(formData.get("code") || "").trim(),
+      deliveredAt: String(formData.get("deliveredAt") || ""),
+      validityDays: Number(formData.get("validityDays") || 0),
+      quantity: Number(formData.get("quantity") || 1),
+      notes: String(formData.get("notes") || "").trim(),
+    },
+    ...epiRecords,
+  ];
+
+  saveEpiRecords();
+  renderEpiRecords();
+  epiForm.reset();
+  setDefaultEpiDateTime();
+});
+
+epiRows?.addEventListener("click", (event) => {
+  const removeButton = event.target.closest("[data-epi-remove]");
+  if (!removeButton) return;
+
+  epiRecords = epiRecords.filter((record) => record.id !== removeButton.dataset.epiRemove);
+  saveEpiRecords();
+  renderEpiRecords();
+});
+
+clearEpiRecords?.addEventListener("click", () => {
+  epiRecords = [];
+  saveEpiRecords();
+  renderEpiRecords();
+});
+
 toggleResolved?.addEventListener("click", () => {
   showResolved = !showResolved;
   renderAudits();
@@ -663,6 +856,8 @@ renderAudits();
 renderRoadmap();
 renderCampaigns();
 renderIndicators();
+setDefaultEpiDateTime();
+renderEpiRecords();
 syncActiveNavigation();
 setupSidebar();
 setupHeroTilt();
