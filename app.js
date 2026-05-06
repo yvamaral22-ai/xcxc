@@ -331,6 +331,8 @@ const roadmapNode = document.querySelector("#roadmap");
 const campaignList = document.querySelector("#campaignList");
 const mediaList = document.querySelector("#mediaList");
 const highlightGrid = document.querySelector("#highlightGrid");
+const highlightScrollSection = document.querySelector("#destaques");
+const highlightViewport = document.querySelector(".highlight-viewport");
 const indicatorRings = document.querySelector("#indicatorRings");
 const rankingList = document.querySelector("#rankingList");
 const unitGrid = document.querySelector("#unitGrid");
@@ -354,6 +356,7 @@ const formFrame = document.querySelector("#formFrame");
 const formExternalLink = document.querySelector("#formExternalLink");
 let showResolved = true;
 let epiRecords = loadEpiRecords();
+let highlightScrollDistance = 0;
 
 const metricNodes = {
   miniCompliance: document.querySelector("#miniCompliance"),
@@ -708,6 +711,41 @@ function setupSidebar() {
   });
 }
 
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function isHighlightScrollEnabled() {
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  return Boolean(highlightScrollSection && highlightGrid && highlightViewport && window.innerWidth > 900 && !reducedMotion);
+}
+
+function updateHighlightScroll() {
+  if (!isHighlightScrollEnabled()) return;
+
+  const scrollableHeight = Math.max(1, highlightScrollSection.offsetHeight - window.innerHeight);
+  const progress = clamp(-highlightScrollSection.getBoundingClientRect().top / scrollableHeight, 0, 1);
+
+  highlightScrollSection.style.setProperty("--highlight-x", `${(highlightScrollDistance * -progress).toFixed(2)}px`);
+  highlightScrollSection.style.setProperty("--highlight-progress", `${(progress * 100).toFixed(2)}%`);
+}
+
+function setupHighlightScroll() {
+  if (!highlightScrollSection || !highlightGrid || !highlightViewport) return;
+
+  if (!isHighlightScrollEnabled()) {
+    highlightScrollDistance = 0;
+    highlightScrollSection.style.removeProperty("--highlight-scroll-distance");
+    highlightScrollSection.style.setProperty("--highlight-x", "0px");
+    highlightScrollSection.style.setProperty("--highlight-progress", "0%");
+    return;
+  }
+
+  highlightScrollDistance = Math.max(0, highlightGrid.scrollWidth - highlightViewport.clientWidth);
+  highlightScrollSection.style.setProperty("--highlight-scroll-distance", `${Math.max(1, highlightScrollDistance)}px`);
+  updateHighlightScroll();
+}
+
 function renderCampaigns() {
   if (!campaignList || !mediaList) return;
 
@@ -988,13 +1026,28 @@ toggleResolved?.addEventListener("click", () => {
   renderCalculatedMetrics();
 });
 
-window.addEventListener("scroll", syncActiveNavigation, { passive: true });
+window.addEventListener(
+  "scroll",
+  () => {
+    syncActiveNavigation();
+    updateHighlightScroll();
+  },
+  { passive: true },
+);
+
+window.addEventListener("resize", () => {
+  setupHighlightScroll();
+  syncActiveNavigation();
+});
+
+window.addEventListener("load", setupHighlightScroll);
 
 renderModules();
 renderIntegrations();
 renderAudits();
 renderRoadmap();
 renderHighlights();
+setupHighlightScroll();
 renderCampaigns();
 renderIndicators();
 setDefaultEpiDateTime();

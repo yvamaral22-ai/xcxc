@@ -1473,14 +1473,42 @@ body.nav-open .sidebar-overlay {
   gap: 16px;
 }
 
-.highlight-grid {
+.highlight-scroll-section {
+  --highlight-x: 0px;
+  --highlight-progress: 0%;
+  --highlight-scroll-distance: 900px;
+  min-height: calc(100vh + var(--highlight-scroll-distance));
+  padding: 0;
+}
+
+.highlight-sticky {
+  position: sticky;
+  top: 20px;
+  min-height: calc(100vh - 40px);
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-content: center;
+  gap: 18px;
+  padding: 26px;
+}
+
+.highlight-viewport {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.highlight-grid {
+  display: flex;
   gap: 16px;
+  width: max-content;
+  transform: translate3d(var(--highlight-x), 0, 0);
+  transition: transform 0.08s linear;
+  will-change: transform;
 }
 
 .highlight-card {
   position: relative;
+  flex: 0 0 clamp(320px, 34vw, 500px);
   min-height: 430px;
   display: grid;
   grid-template-rows: minmax(220px, 1fr) auto;
@@ -1492,7 +1520,7 @@ body.nav-open .sidebar-overlay {
 }
 
 .highlight-card-featured {
-  grid-column: span 2;
+  flex-basis: clamp(460px, 48vw, 700px);
 }
 
 .highlight-photo {
@@ -1559,6 +1587,23 @@ body.nav-open .sidebar-overlay {
 
 .highlight-content p {
   font-size: 0.92rem;
+}
+
+.highlight-progress {
+  position: relative;
+  z-index: 1;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(15, 92, 180, 0.1);
+}
+
+.highlight-progress span {
+  display: block;
+  width: var(--highlight-progress);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--blue-700), var(--teal-500));
 }
 
 .campaign-feature,
@@ -2282,14 +2327,6 @@ tbody tr:last-child td {
     grid-template-columns: 1fr;
   }
 
-  .highlight-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .highlight-card-featured {
-    grid-column: auto;
-  }
-
   .blueprint-top-grid,
   .blueprint-bottom-grid,
   .screen-strip {
@@ -2422,9 +2459,43 @@ tbody tr:last-child td {
 
   .quick-access,
   .module-grid,
-  .highlight-grid,
   .integration-grid {
     grid-template-columns: 1fr;
+  }
+
+  .highlight-scroll-section {
+    min-height: auto;
+    padding: 20px;
+  }
+
+  .highlight-sticky {
+    position: relative;
+    top: auto;
+    min-height: auto;
+    padding: 0;
+  }
+
+  .highlight-viewport {
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .highlight-grid {
+    transform: none !important;
+    transition: none;
+  }
+
+  .highlight-card,
+  .highlight-card-featured {
+    flex-basis: min(82vw, 380px);
+    min-height: 400px;
+    scroll-snap-align: start;
+  }
+
+  .highlight-progress {
+    display: none;
   }
 
   .status-board {
