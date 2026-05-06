@@ -1653,6 +1653,7 @@ body.nav-open .sidebar-overlay {
 }
 
 .highlight-viewer-card {
+  height: 100%;
   min-height: 0;
   max-height: 100%;
   display: grid;
@@ -1664,9 +1665,11 @@ body.nav-open .sidebar-overlay {
 }
 
 .highlight-category-scroll {
+  min-width: 0;
   min-height: 0;
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
   padding-bottom: var(--highlight-photo-distance);
   scrollbar-width: none;
@@ -1682,6 +1685,7 @@ body.nav-open .sidebar-overlay {
 .highlight-category-sticky {
   position: sticky;
   top: 0;
+  min-width: 0;
   display: grid;
   gap: 12px;
   align-content: center;
@@ -1691,6 +1695,7 @@ body.nav-open .sidebar-overlay {
 
 .highlight-viewer-photo {
   position: relative;
+  min-width: 0;
   min-height: 420px;
   height: min(560px, 58vh);
   background:
@@ -1772,6 +1777,9 @@ body.nav-open .sidebar-overlay {
 }
 
 .highlight-viewer-content {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
   display: grid;
   align-content: center;
   align-self: center;

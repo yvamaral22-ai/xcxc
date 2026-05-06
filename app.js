@@ -696,7 +696,7 @@ function updateHighlightModal(index) {
   }
 
   if (highlightCategoryScroll) highlightCategoryScroll.scrollTop = 0;
-  setupHighlightPhotoScroll();
+  requestAnimationFrame(setupHighlightPhotoScroll);
 }
 
 function openHighlightModal(index, trigger = null) {
