@@ -237,6 +237,11 @@ const highlights = [
     image: "./assets/destaque-seguranca.jpg",
     alt: "Foto do destaque do mes em seguranca",
     status: "Mensal",
+    photos: [
+      { src: "./assets/destaque-seguranca.jpg", alt: "Foto principal do destaque do mes em seguranca" },
+      { src: "./assets/destaque-seguranca-02.jpg", alt: "Segunda foto do destaque do mes em seguranca" },
+      { src: "./assets/destaque-seguranca-03.jpg", alt: "Terceira foto do destaque do mes em seguranca" },
+    ],
   },
   {
     label: "Kaizen",
@@ -245,6 +250,11 @@ const highlights = [
     image: "./assets/destaque-kaizen.jpg",
     alt: "Foto do destaque Kaizen",
     status: "Melhoria",
+    photos: [
+      { src: "./assets/destaque-kaizen.jpg", alt: "Foto principal do destaque Kaizen" },
+      { src: "./assets/destaque-kaizen-02.jpg", alt: "Segunda foto do destaque Kaizen" },
+      { src: "./assets/destaque-kaizen-03.jpg", alt: "Terceira foto do destaque Kaizen" },
+    ],
   },
   {
     label: "N3",
@@ -253,6 +263,11 @@ const highlights = [
     image: "./assets/destaque-n3.jpg",
     alt: "Foto do destaque N3",
     status: "Operacao",
+    photos: [
+      { src: "./assets/destaque-n3.jpg", alt: "Foto principal do destaque N3" },
+      { src: "./assets/destaque-n3-02.jpg", alt: "Segunda foto do destaque N3" },
+      { src: "./assets/destaque-n3-03.jpg", alt: "Terceira foto do destaque N3" },
+    ],
   },
   {
     label: "Inspecao",
@@ -261,6 +276,11 @@ const highlights = [
     image: "./assets/destaque-inspecao.jpg",
     alt: "Foto da inspecao destaque",
     status: "Auditoria",
+    photos: [
+      { src: "./assets/destaque-inspecao.jpg", alt: "Foto principal da inspecao destaque" },
+      { src: "./assets/destaque-inspecao-02.jpg", alt: "Segunda foto da inspecao destaque" },
+      { src: "./assets/destaque-inspecao-03.jpg", alt: "Terceira foto da inspecao destaque" },
+    ],
   },
   {
     label: "Equipe",
@@ -269,6 +289,11 @@ const highlights = [
     image: "./assets/destaque-equipe.jpg",
     alt: "Foto da equipe de seguranca",
     status: "Equipe",
+    photos: [
+      { src: "./assets/destaque-equipe.jpg", alt: "Foto principal da equipe de seguranca" },
+      { src: "./assets/destaque-equipe-02.jpg", alt: "Segunda foto da equipe de seguranca" },
+      { src: "./assets/destaque-equipe-03.jpg", alt: "Terceira foto da equipe de seguranca" },
+    ],
   },
 ];
 
@@ -331,8 +356,6 @@ const roadmapNode = document.querySelector("#roadmap");
 const campaignList = document.querySelector("#campaignList");
 const mediaList = document.querySelector("#mediaList");
 const highlightGrid = document.querySelector("#highlightGrid");
-const highlightScrollSection = document.querySelector("#destaques");
-const highlightViewport = document.querySelector(".highlight-viewport");
 const indicatorRings = document.querySelector("#indicatorRings");
 const rankingList = document.querySelector("#rankingList");
 const unitGrid = document.querySelector("#unitGrid");
@@ -355,19 +378,21 @@ const formModalTitle = document.querySelector("#formModalTitle");
 const formFrame = document.querySelector("#formFrame");
 const formExternalLink = document.querySelector("#formExternalLink");
 const highlightModal = document.querySelector("#highlightModal");
+const highlightModalPanel = document.querySelector(".highlight-modal-panel");
 const highlightModalTitle = document.querySelector("#highlightModalTitle");
 const highlightModalSubtitle = document.querySelector("#highlightModalSubtitle");
 const highlightModalText = document.querySelector("#highlightModalText");
 const highlightModalStatus = document.querySelector("#highlightModalStatus");
 const highlightModalCounter = document.querySelector("#highlightModalCounter");
-const highlightModalImage = document.querySelector("#highlightModalImage");
 const highlightModalPhoto = document.querySelector("#highlightModalPhoto");
+const highlightModalPhotoStrip = document.querySelector("#highlightModalPhotoStrip");
+const highlightCategoryScroll = document.querySelector("#highlightCategoryScroll");
 const highlightModalTrack = document.querySelector("#highlightModalTrack");
 const highlightPrev = document.querySelector("#highlightPrev");
 const highlightNext = document.querySelector("#highlightNext");
 let showResolved = true;
 let epiRecords = loadEpiRecords();
-let highlightScrollDistance = 0;
+let highlightPhotoScrollDistance = 0;
 let activeHighlightIndex = 0;
 let lastHighlightTrigger = null;
 
@@ -525,6 +550,10 @@ function toPlainText(value) {
   return parser.parseFromString(value, "text/html").documentElement.textContent || value;
 }
 
+function getHighlightPhotos(highlight) {
+  return highlight.photos?.length ? highlight.photos : [{ src: highlight.image, alt: highlight.alt }];
+}
+
 function renderCalculatedMetrics() {
   const metrics = getOperationalMetrics();
 
@@ -638,23 +667,25 @@ function updateHighlightModal(index) {
 
   activeHighlightIndex = (index + highlights.length) % highlights.length;
   const highlight = highlights[activeHighlightIndex];
+  const photos = getHighlightPhotos(highlight);
 
   if (highlightModalTitle) highlightModalTitle.textContent = `Visualizacao: ${toPlainText(highlight.titleHtml)}`;
   if (highlightModalSubtitle) highlightModalSubtitle.innerHTML = highlight.titleHtml;
   if (highlightModalText) highlightModalText.innerHTML = highlight.textHtml;
   if (highlightModalStatus) highlightModalStatus.textContent = highlight.status;
-  if (highlightModalCounter) highlightModalCounter.textContent = `${activeHighlightIndex + 1} de ${highlights.length}`;
+  if (highlightModalCounter) highlightModalCounter.textContent = `${photos.length} foto(s) | categoria ${activeHighlightIndex + 1} de ${highlights.length}`;
 
-  if (highlightModalImage && highlightModalPhoto) {
-    highlightModalPhoto.classList.remove("is-missing");
-    highlightModalImage.alt = highlight.alt;
-    highlightModalImage.onerror = () => {
-      highlightModalPhoto.classList.add("is-missing");
-    };
-    highlightModalImage.onload = () => {
-      highlightModalPhoto.classList.remove("is-missing");
-    };
-    highlightModalImage.src = highlight.image;
+  if (highlightModalPhotoStrip) {
+    highlightModalPhotoStrip.innerHTML = photos
+      .map(
+        (photo, photoIndex) => `
+          <figure class="highlight-modal-photo">
+            <img src="${photo.src}" alt="${photo.alt}" onerror="this.closest('.highlight-modal-photo').classList.add('is-missing'); this.remove();" />
+            <figcaption>${String(photoIndex + 1).padStart(2, "0")} / ${String(photos.length).padStart(2, "0")}</figcaption>
+          </figure>
+        `,
+      )
+      .join("");
   }
 
   if (highlightModalTrack) {
@@ -664,6 +695,9 @@ function updateHighlightModal(index) {
       button.setAttribute("aria-current", isCurrent ? "true" : "false");
     });
   }
+
+  if (highlightModalPanel) highlightModalPanel.scrollTop = 0;
+  setupHighlightPhotoScroll();
 }
 
 function openHighlightModal(index, trigger = null) {
@@ -688,6 +722,34 @@ function closeHighlightModal() {
 function moveHighlightModal(direction) {
   if (!highlightModal || highlightModal.hidden) return;
   updateHighlightModal(activeHighlightIndex + direction);
+}
+
+function setupHighlightPhotoScroll() {
+  if (!highlightModalPhoto || !highlightModalPhotoStrip || !highlightCategoryScroll) return;
+
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  highlightPhotoScrollDistance = Math.max(0, highlightModalPhotoStrip.scrollWidth - highlightModalPhoto.clientWidth);
+
+  if (reducedMotion || window.innerWidth <= 720) {
+    highlightCategoryScroll.style.removeProperty("--highlight-photo-distance");
+    highlightCategoryScroll.style.setProperty("--highlight-photo-x", "0px");
+    highlightCategoryScroll.style.setProperty("--highlight-photo-progress", "0%");
+    return;
+  }
+
+  highlightCategoryScroll.style.setProperty("--highlight-photo-distance", `${Math.max(1, highlightPhotoScrollDistance)}px`);
+  updateHighlightPhotoScroll();
+}
+
+function updateHighlightPhotoScroll() {
+  if (!highlightModalPanel || !highlightCategoryScroll || !highlightModalPhotoStrip) return;
+  if (!highlightPhotoScrollDistance || window.innerWidth <= 720) return;
+
+  const scrollableHeight = Math.max(1, highlightCategoryScroll.offsetHeight - highlightModalPanel.clientHeight);
+  const progress = clamp(highlightModalPanel.scrollTop / scrollableHeight, 0, 1);
+
+  highlightCategoryScroll.style.setProperty("--highlight-photo-x", `${(highlightPhotoScrollDistance * -progress).toFixed(2)}px`);
+  highlightCategoryScroll.style.setProperty("--highlight-photo-progress", `${(progress * 100).toFixed(2)}%`);
 }
 
 function trapHighlightModalFocus(event) {
@@ -810,37 +872,6 @@ function setupSidebar() {
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
-}
-
-function isHighlightScrollEnabled() {
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  return Boolean(highlightScrollSection && highlightGrid && highlightViewport && window.innerWidth > 900 && !reducedMotion);
-}
-
-function updateHighlightScroll() {
-  if (!isHighlightScrollEnabled()) return;
-
-  const scrollableHeight = Math.max(1, highlightScrollSection.offsetHeight - window.innerHeight);
-  const progress = clamp(-highlightScrollSection.getBoundingClientRect().top / scrollableHeight, 0, 1);
-
-  highlightScrollSection.style.setProperty("--highlight-x", `${(highlightScrollDistance * -progress).toFixed(2)}px`);
-  highlightScrollSection.style.setProperty("--highlight-progress", `${(progress * 100).toFixed(2)}%`);
-}
-
-function setupHighlightScroll() {
-  if (!highlightScrollSection || !highlightGrid || !highlightViewport) return;
-
-  if (!isHighlightScrollEnabled()) {
-    highlightScrollDistance = 0;
-    highlightScrollSection.style.removeProperty("--highlight-scroll-distance");
-    highlightScrollSection.style.setProperty("--highlight-x", "0px");
-    highlightScrollSection.style.setProperty("--highlight-progress", "0%");
-    return;
-  }
-
-  highlightScrollDistance = Math.max(0, highlightGrid.scrollWidth - highlightViewport.clientWidth);
-  highlightScrollSection.style.setProperty("--highlight-scroll-distance", `${Math.max(1, highlightScrollDistance)}px`);
-  updateHighlightScroll();
 }
 
 function renderCampaigns() {
@@ -1179,24 +1210,24 @@ window.addEventListener(
   "scroll",
   () => {
     syncActiveNavigation();
-    updateHighlightScroll();
   },
   { passive: true },
 );
 
 window.addEventListener("resize", () => {
-  setupHighlightScroll();
+  setupHighlightPhotoScroll();
   syncActiveNavigation();
 });
 
-window.addEventListener("load", setupHighlightScroll);
+highlightModalPanel?.addEventListener("scroll", updateHighlightPhotoScroll, { passive: true });
+
+window.addEventListener("load", setupHighlightPhotoScroll);
 
 renderModules();
 renderIntegrations();
 renderAudits();
 renderRoadmap();
 renderHighlights();
-setupHighlightScroll();
 renderCampaigns();
 renderIndicators();
 setDefaultEpiDateTime();
