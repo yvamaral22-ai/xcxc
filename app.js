@@ -354,9 +354,22 @@ const formModal = document.querySelector("#formModal");
 const formModalTitle = document.querySelector("#formModalTitle");
 const formFrame = document.querySelector("#formFrame");
 const formExternalLink = document.querySelector("#formExternalLink");
+const highlightModal = document.querySelector("#highlightModal");
+const highlightModalTitle = document.querySelector("#highlightModalTitle");
+const highlightModalSubtitle = document.querySelector("#highlightModalSubtitle");
+const highlightModalText = document.querySelector("#highlightModalText");
+const highlightModalStatus = document.querySelector("#highlightModalStatus");
+const highlightModalCounter = document.querySelector("#highlightModalCounter");
+const highlightModalImage = document.querySelector("#highlightModalImage");
+const highlightModalPhoto = document.querySelector("#highlightModalPhoto");
+const highlightModalTrack = document.querySelector("#highlightModalTrack");
+const highlightPrev = document.querySelector("#highlightPrev");
+const highlightNext = document.querySelector("#highlightNext");
 let showResolved = true;
 let epiRecords = loadEpiRecords();
 let highlightScrollDistance = 0;
+let activeHighlightIndex = 0;
+let lastHighlightTrigger = null;
 
 const metricNodes = {
   miniCompliance: document.querySelector("#miniCompliance"),
@@ -507,6 +520,11 @@ function setText(node, value) {
   if (node) node.textContent = value;
 }
 
+function toPlainText(value) {
+  const parser = new DOMParser();
+  return parser.parseFromString(value, "text/html").documentElement.textContent || value;
+}
+
 function renderCalculatedMetrics() {
   const metrics = getOperationalMetrics();
 
@@ -615,6 +633,84 @@ function closeEmbeddedIntegration() {
   document.body.classList.remove("modal-open");
 }
 
+function updateHighlightModal(index) {
+  if (!highlightModal) return;
+
+  activeHighlightIndex = (index + highlights.length) % highlights.length;
+  const highlight = highlights[activeHighlightIndex];
+
+  if (highlightModalTitle) highlightModalTitle.textContent = `Visualizacao: ${toPlainText(highlight.titleHtml)}`;
+  if (highlightModalSubtitle) highlightModalSubtitle.innerHTML = highlight.titleHtml;
+  if (highlightModalText) highlightModalText.innerHTML = highlight.textHtml;
+  if (highlightModalStatus) highlightModalStatus.textContent = highlight.status;
+  if (highlightModalCounter) highlightModalCounter.textContent = `${activeHighlightIndex + 1} de ${highlights.length}`;
+
+  if (highlightModalImage && highlightModalPhoto) {
+    highlightModalPhoto.classList.remove("is-missing");
+    highlightModalImage.alt = highlight.alt;
+    highlightModalImage.onerror = () => {
+      highlightModalPhoto.classList.add("is-missing");
+    };
+    highlightModalImage.onload = () => {
+      highlightModalPhoto.classList.remove("is-missing");
+    };
+    highlightModalImage.src = highlight.image;
+  }
+
+  if (highlightModalTrack) {
+    highlightModalTrack.querySelectorAll("[data-highlight-thumb]").forEach((button) => {
+      const isCurrent = Number(button.dataset.highlightThumb) === activeHighlightIndex;
+      button.classList.toggle("active", isCurrent);
+      button.setAttribute("aria-current", isCurrent ? "true" : "false");
+    });
+  }
+}
+
+function openHighlightModal(index, trigger = null) {
+  if (!highlightModal) return;
+
+  lastHighlightTrigger = trigger || document.activeElement;
+  highlightModal.hidden = false;
+  document.body.classList.add("modal-open");
+  updateHighlightModal(index);
+  highlightModal.querySelector("[data-highlight-close]")?.focus();
+}
+
+function closeHighlightModal() {
+  if (!highlightModal || highlightModal.hidden) return;
+
+  highlightModal.hidden = true;
+  document.body.classList.remove("modal-open");
+  lastHighlightTrigger?.focus?.();
+  lastHighlightTrigger = null;
+}
+
+function moveHighlightModal(direction) {
+  if (!highlightModal || highlightModal.hidden) return;
+  updateHighlightModal(activeHighlightIndex + direction);
+}
+
+function trapHighlightModalFocus(event) {
+  if (!highlightModal || highlightModal.hidden || event.key !== "Tab") return;
+
+  const focusable = [...highlightModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')].filter(
+    (node) => !node.disabled && node.offsetParent !== null,
+  );
+
+  if (!focusable.length) return;
+
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
 function renderAudits() {
   const rows = audits.filter((audit) => showResolved || audit.status !== "Resolvido");
   if (!rows.length) {
@@ -707,6 +803,7 @@ function setupSidebar() {
     if (event.key === "Escape") {
       setSidebarState(false);
       closeEmbeddedIntegration();
+      closeHighlightModal();
     }
   });
 }
@@ -788,20 +885,39 @@ function renderHighlights() {
   highlightGrid.innerHTML = highlights
     .map(
       (highlight, index) => `
-        <article class="highlight-card ${index === 0 ? "highlight-card-featured" : ""}">
-          <div class="highlight-photo">
+        <button
+          class="highlight-card ${index === 0 ? "highlight-card-featured" : ""}"
+          type="button"
+          data-highlight-index="${index}"
+          aria-haspopup="dialog"
+          aria-label="Abrir ${toPlainText(highlight.titleHtml)}"
+        >
+          <span class="highlight-photo">
             <img src="${highlight.image}" alt="${highlight.alt}" loading="lazy" onerror="this.closest('.highlight-photo').classList.add('is-missing'); this.remove();" />
             <span>${highlight.label}</span>
-          </div>
-          <div class="highlight-content">
+          </span>
+          <span class="highlight-content">
             <span class="tag">${highlight.status}</span>
-            <h3>${highlight.titleHtml}</h3>
-            <p>${highlight.textHtml}</p>
-          </div>
-        </article>
+            <span class="highlight-title">${highlight.titleHtml}</span>
+            <span class="highlight-text">${highlight.textHtml}</span>
+          </span>
+        </button>
       `,
     )
     .join("");
+
+  if (highlightModalTrack) {
+    highlightModalTrack.innerHTML = highlights
+      .map(
+        (highlight, index) => `
+          <button class="highlight-thumb" type="button" data-highlight-thumb="${index}" aria-label="Ir para ${toPlainText(highlight.titleHtml)}">
+            <span>${String(index + 1).padStart(2, "0")}</span>
+            <strong>${highlight.label}</strong>
+          </button>
+        `,
+      )
+      .join("");
+  }
 }
 
 function renderIndicators() {
@@ -958,6 +1074,39 @@ integrationGrid?.addEventListener("click", (event) => {
   const item = integrations[Number(trigger.dataset.integrationIndex)];
   if (item) {
     openEmbeddedIntegration(item);
+  }
+});
+
+highlightGrid?.addEventListener("click", (event) => {
+  const trigger = event.target.closest("[data-highlight-index]");
+  if (!trigger) return;
+
+  openHighlightModal(Number(trigger.dataset.highlightIndex), trigger);
+});
+
+highlightModalTrack?.addEventListener("click", (event) => {
+  const trigger = event.target.closest("[data-highlight-thumb]");
+  if (!trigger) return;
+
+  updateHighlightModal(Number(trigger.dataset.highlightThumb));
+});
+
+highlightPrev?.addEventListener("click", () => moveHighlightModal(-1));
+highlightNext?.addEventListener("click", () => moveHighlightModal(1));
+
+document.querySelectorAll("[data-highlight-close]").forEach((button) => {
+  button.addEventListener("click", closeHighlightModal);
+});
+
+highlightModal?.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowLeft") {
+    event.preventDefault();
+    moveHighlightModal(-1);
+  } else if (event.key === "ArrowRight") {
+    event.preventDefault();
+    moveHighlightModal(1);
+  } else {
+    trapHighlightModalFocus(event);
   }
 });
 

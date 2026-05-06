@@ -615,6 +615,45 @@
       </div>
     </div>
 
+    <div class="highlight-modal" id="highlightModal" role="dialog" aria-modal="true" aria-labelledby="highlightModalTitle" hidden>
+      <div class="highlight-modal-backdrop" data-highlight-close></div>
+      <div class="highlight-modal-panel">
+        <div class="highlight-modal-header">
+          <div>
+            <span class="eyebrow">Destaques</span>
+            <h2 id="highlightModalTitle">Visualizacao de destaques</h2>
+          </div>
+          <button class="button neutral" type="button" data-highlight-close>
+            <span>Fechar</span>
+          </button>
+        </div>
+
+        <div class="highlight-viewer">
+          <button class="highlight-nav-button" type="button" id="highlightPrev" aria-label="Destaque anterior">
+            <span aria-hidden="true">&#8249;</span>
+          </button>
+
+          <article class="highlight-viewer-card">
+            <div class="highlight-viewer-photo" id="highlightModalPhoto">
+              <img id="highlightModalImage" src="" alt="" />
+            </div>
+            <div class="highlight-viewer-content">
+              <span class="tag" id="highlightModalStatus">Mensal</span>
+              <h3 id="highlightModalSubtitle">Destaque</h3>
+              <p id="highlightModalText">Conteudo do destaque.</p>
+              <span class="highlight-counter" id="highlightModalCounter">1 de 5</span>
+            </div>
+          </article>
+
+          <button class="highlight-nav-button" type="button" id="highlightNext" aria-label="Proximo destaque">
+            <span aria-hidden="true">&#8250;</span>
+          </button>
+        </div>
+
+        <div class="highlight-modal-track" id="highlightModalTrack" aria-label="Selecionar destaque"></div>
+      </div>
+    </div>
+
     <script src="./app.js"></script>
   </body>
 </html>
