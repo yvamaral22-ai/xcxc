@@ -1665,13 +1665,13 @@ body.nav-open .sidebar-overlay {
 }
 
 .highlight-category-scroll {
+  position: relative;
   min-width: 0;
   min-height: 0;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
-  padding-bottom: var(--highlight-photo-distance);
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -1691,6 +1691,13 @@ body.nav-open .sidebar-overlay {
   align-content: center;
   min-height: 560px;
   background: rgba(255, 255, 255, 0.18);
+}
+
+.highlight-category-scroll::after {
+  content: "";
+  display: block;
+  height: var(--highlight-photo-distance);
+  pointer-events: none;
 }
 
 .highlight-viewer-photo {
@@ -2751,7 +2758,6 @@ tbody tr:last-child td {
 
   .highlight-category-scroll {
     height: 100%;
-    padding-bottom: var(--highlight-photo-distance);
   }
 
   .highlight-category-sticky {
@@ -2871,6 +2877,10 @@ tbody tr:last-child td {
     height: auto;
     padding-bottom: 0;
     overflow-y: visible;
+  }
+
+  .highlight-category-scroll::after {
+    display: none;
   }
 
   .highlight-category-sticky {
