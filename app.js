@@ -7,31 +7,31 @@ const modules = [
     href: "#integracoes",
   },
   {
-    tag: "Comunicacao",
+    tag: "Comunicação",
     titleHtml: "Campanhas e Comunicados",
-    textHtml: "Destaques do mes, comunicados recentes e materiais para engajamento em campo.",
-    items: ["Campanha do mes", "Comunicados", "Materiais de apoio"],
+    textHtml: "Destaques do mês, comunicados recentes e materiais para engajamento em campo.",
+    items: ["Campanha do mês", "Comunicados", "Materiais de apoio"],
     href: "#campanhas",
   },
   {
-    tag: "Midia",
-    titleHtml: "Videos, Treinamentos e DDS",
-    textHtml: "Conteudos audiovisuais para abertura, reciclagem, DDS e liberacoes criticas.",
-    items: ["Videos em destaque", "Treinamentos", "DDS orientado"],
+    tag: "Mídia",
+    titleHtml: "Vídeos, Treinamentos e DDS",
+    textHtml: "Conteúdos audiovisuais para abertura, reciclagem, DDS e liberações críticas.",
+    items: ["Vídeos em destaque", "Treinamentos", "DDS orientado"],
     href: "#campanhas",
   },
   {
-    tag: "Gestao",
+    tag: "Gestão",
     titleHtml: "Indicadores e Performance",
-    textHtml: "Camada executiva para metas, ranking, unidades e tomada de decisao.",
+    textHtml: "Camada executiva para metas, ranking, unidades e tomada de decisão.",
     items: ["KPIs", "Ranking N3", "Unidades"],
     href: "#indicadores",
   },
   {
     tag: "Documentos",
     titleHtml: "Biblioteca SESMT",
-    textHtml: "Procedimentos, evidencias, formularios e documentos oficiais do SGI.",
-    items: ["SharePoint", "Procedimentos", "Evidencias"],
+    textHtml: "Procedimentos, evidências, formulários e documentos oficiais do SGI.",
+    items: ["SharePoint", "Procedimentos", "Evidências"],
     href: "#integracoes",
   },
   {
@@ -43,9 +43,9 @@ const modules = [
   },
   {
     tag: "Auditoria",
-    titleHtml: "Pendencias e Evidencias",
-    textHtml: "Fila de acoes, responsaveis, prazos e status para acompanhamento de auditoria.",
-    items: ["Plano de acao", "Prazos", "Responsaveis"],
+    titleHtml: "Pendências e evidências",
+    textHtml: "Fila de ações, responsáveis, prazos e status para acompanhamento de auditoria.",
+    items: ["Plano de ação", "Prazos", "Responsáveis"],
     href: "#auditoria",
   },
 ];
@@ -54,7 +54,7 @@ const integrations = [
   {
     title: "VES Vale",
     titleHtml: "VES Vale",
-    descriptionHtml: "Formulario Vale de solicitacao de acesso ao sistema de educacao - VES.",
+    descriptionHtml: "Formulário Vale de solicitação de acesso ao sistema de educação - VES.",
     type: "Acesso",
     owner: "Vale",
     status: "Ativo",
@@ -64,7 +64,7 @@ const integrations = [
   {
     title: "IRIS Vale",
     titleHtml: "IRIS Vale",
-    descriptionHtml: "Acesso Vale para registro de desvios N3 e inspecoes.",
+    descriptionHtml: "Acesso Vale para registro de desvios N3 e inspeções.",
     type: "Sistema",
     owner: "Vale",
     status: "Ativo",
@@ -94,8 +94,8 @@ const integrations = [
   {
     title: "Registro N3 - XCMG 01",
     titleHtml: "Registro N3 - XCMG 01",
-    descriptionHtml: "Formulario Microsoft para registro de N3 da operacao XCMG.",
-    type: "Formulario",
+    descriptionHtml: "Formulário Microsoft para registro de N3 da operação XCMG.",
+    type: "Formulário",
     owner: "XCMG",
     status: "Ativo",
     href: "https://forms.cloud.microsoft/r/5T6140MTkc?origin=lprLink",
@@ -104,8 +104,8 @@ const integrations = [
   {
     title: "Registro N3 - XCMG 02",
     titleHtml: "Registro N3 - XCMG 02",
-    descriptionHtml: "Formulario Microsoft para registro de N3 da operacao XCMG.",
-    type: "Formulario",
+    descriptionHtml: "Formulário Microsoft para registro de N3 da operação XCMG.",
+    type: "Formulário",
     owner: "XCMG",
     status: "Ativo",
     href: "https://forms.cloud.microsoft/r/QFULCPdRjR?origin=lprLink",
@@ -114,8 +114,8 @@ const integrations = [
   {
     title: "Registro N3 - XCMG 03",
     titleHtml: "Registro N3 - XCMG 03",
-    descriptionHtml: "Formulario Microsoft para registro de N3 da operacao XCMG.",
-    type: "Formulario",
+    descriptionHtml: "Formulário Microsoft para registro de N3 da operação XCMG.",
+    type: "Formulário",
     owner: "XCMG",
     status: "Ativo",
     href: "https://forms.cloud.microsoft/r/tugrbGGgUu?origin=lprLink",
@@ -124,8 +124,8 @@ const integrations = [
   {
     title: "Registro N3 - XCMG 04",
     titleHtml: "Registro N3 - XCMG 04",
-    descriptionHtml: "Formulario Microsoft para registro de N3 da operacao XCMG.",
-    type: "Formulario",
+    descriptionHtml: "Formulário Microsoft para registro de N3 da operação XCMG.",
+    type: "Formulário",
     owner: "XCMG",
     status: "Ativo",
     href: "https://forms.cloud.microsoft/r/Y807NMZNut?origin=lprLink",
@@ -134,8 +134,8 @@ const integrations = [
   {
     title: "Registro N3 - XCMG 05",
     titleHtml: "Registro N3 - XCMG 05",
-    descriptionHtml: "Formulario Microsoft para registro de N3 da operacao XCMG.",
-    type: "Formulario",
+    descriptionHtml: "Formulário Microsoft para registro de N3 da operação XCMG.",
+    type: "Formulário",
     owner: "XCMG",
     status: "Ativo",
     href: "https://forms.cloud.microsoft/r/dUvnAjM2GH?origin=lprLink",
@@ -144,8 +144,8 @@ const integrations = [
   {
     title: "Registro N3 - XCMG 06",
     titleHtml: "Registro N3 - XCMG 06",
-    descriptionHtml: "Formulario Microsoft para registro de N3 da operacao XCMG.",
-    type: "Formulario",
+    descriptionHtml: "Formulário Microsoft para registro de N3 da operação XCMG.",
+    type: "Formulário",
     owner: "XCMG",
     status: "Ativo",
     href: "https://forms.cloud.microsoft/r/35NYBAHrab?origin=lprLink",
@@ -154,8 +154,8 @@ const integrations = [
   {
     title: "Registro N3 - XCMG 07",
     titleHtml: "Registro N3 - XCMG 07",
-    descriptionHtml: "Formulario Microsoft para registro de N3 da operacao XCMG.",
-    type: "Formulario",
+    descriptionHtml: "Formulário Microsoft para registro de N3 da operação XCMG.",
+    type: "Formulário",
     owner: "XCMG",
     status: "Ativo",
     href: "https://forms.cloud.microsoft/r/uftekVRsSy?origin=lprLink",
@@ -169,7 +169,7 @@ const integrations = [
     owner: "Operação",
     status: "Ativo",
     href: "https://forms.office.com/r/tugrbGGgUu?origin=lprLink",
-    searchText: "dds formulário operação comunicação preventiva diário",
+    searchText: "dds formulario operacao comunicacao preventiva diario",
   },
   {
     title: "Solicitação de EPI",
@@ -184,7 +184,7 @@ const integrations = [
   {
     title: "Direitos Humanos Vale",
     titleHtml: "Direitos Humanos Vale",
-    descriptionHtml: "Divulgacao mensal de direitos humanos Vale.",
+    descriptionHtml: "Divulgação mensal de direitos humanos Vale.",
     type: "Comunicado",
     owner: "Vale",
     status: "Ativo",
@@ -208,20 +208,20 @@ const audits = [];
 const campaigns = [
   {
     titleHtml: "Treinamento Trabalho em Altura",
-    textHtml: "Reciclagem obrigatoria para frentes com liberacao critica.",
+    textHtml: "Reciclagem obrigatória para frentes com liberação crítica.",
     date: "06/05/2026",
     status: "Publicado",
     level: "ok",
   },
   {
-    titleHtml: "DDS Especial - Seguranca nas Maos",
-    textHtml: "Conteudo rapido para alinhamento antes da atividade.",
+    titleHtml: "DDS Especial - Segurança nas Mãos",
+    textHtml: "Conteúdo rápido para alinhamento antes da atividade.",
     date: "05/05/2026",
     status: "Destaque",
     level: "warn",
   },
   {
-    titleHtml: "Nova atualizacao de procedimentos",
+    titleHtml: "Nova atualização de procedimentos",
     textHtml: "Documentos oficiais revisados para consulta SESMT.",
     date: "04/05/2026",
     status: "Revisado",
@@ -231,22 +231,22 @@ const campaigns = [
 
 const highlights = [
   {
-    label: "Seguranca",
-    titleHtml: "Destaque do mes em seguranca",
-    textHtml: "Reconhecimento para atitude preventiva, cuidado ativo e boas praticas em campo.",
+    label: "Segurança",
+    titleHtml: "Destaque do mês em segurança",
+    textHtml: "Reconhecimento para atitude preventiva, cuidado ativo e boas práticas em campo.",
     image: "./assets/destaque-seguranca.jpg",
-    alt: "Foto do destaque do mes em seguranca",
+    alt: "Foto do destaque do mês em segurança",
     status: "Mensal",
     photos: [
-      { src: "./assets/destaque-seguranca.jpg", alt: "Foto principal do destaque do mes em seguranca" },
-      { src: "./assets/destaque-seguranca-02.jpg", alt: "Segunda foto do destaque do mes em seguranca" },
-      { src: "./assets/destaque-seguranca-03.jpg", alt: "Terceira foto do destaque do mes em seguranca" },
+      { src: "./assets/destaque-seguranca.jpg", alt: "Foto principal do destaque do mês em segurança" },
+      { src: "./assets/destaque-seguranca-02.jpg", alt: "Segunda foto do destaque do mês em segurança" },
+      { src: "./assets/destaque-seguranca-03.jpg", alt: "Terceira foto do destaque do mês em segurança" },
     ],
   },
   {
     label: "Kaizen",
     titleHtml: "Destaque Kaizen",
-    textHtml: "Melhoria aplicada que reduziu risco, aumentou organizacao ou elevou a eficiencia da operacao.",
+    textHtml: "Melhoria aplicada que reduziu risco, aumentou organização ou elevou a eficiência da operação.",
     image: "./assets/destaque-kaizen.jpg",
     alt: "Foto do destaque Kaizen",
     status: "Melhoria",
@@ -259,10 +259,10 @@ const highlights = [
   {
     label: "N3",
     titleHtml: "N3 destaque",
-    textHtml: "Registro de desvio, tratativa ou acao exemplar com impacto direto na seguranca operacional.",
+    textHtml: "Registro de desvio, tratativa ou ação exemplar com impacto direto na segurança operacional.",
     image: "./assets/destaque-n3.jpg",
     alt: "Foto do destaque N3",
-    status: "Operacao",
+    status: "Operação",
     photos: [
       { src: "./assets/destaque-n3.jpg", alt: "Foto principal do destaque N3" },
       { src: "./assets/destaque-n3-02.jpg", alt: "Segunda foto do destaque N3" },
@@ -270,48 +270,48 @@ const highlights = [
     ],
   },
   {
-    label: "Inspecao",
-    titleHtml: "Inspecao destaque",
-    textHtml: "Inspecao com evidencia forte, criterio tecnico e encaminhamento claro para a rotina.",
+    label: "Inspeção",
+    titleHtml: "Inspeção destaque",
+    textHtml: "Inspeção com evidência forte, critério técnico e encaminhamento claro para a rotina.",
     image: "./assets/destaque-inspecao.jpg",
-    alt: "Foto da inspecao destaque",
+    alt: "Foto da inspeção destaque",
     status: "Auditoria",
     photos: [
-      { src: "./assets/destaque-inspecao.jpg", alt: "Foto principal da inspecao destaque" },
-      { src: "./assets/destaque-inspecao-02.jpg", alt: "Segunda foto da inspecao destaque" },
-      { src: "./assets/destaque-inspecao-03.jpg", alt: "Terceira foto da inspecao destaque" },
+      { src: "./assets/destaque-inspecao.jpg", alt: "Foto principal da inspeção destaque" },
+      { src: "./assets/destaque-inspecao-02.jpg", alt: "Segunda foto da inspeção destaque" },
+      { src: "./assets/destaque-inspecao-03.jpg", alt: "Terceira foto da inspeção destaque" },
     ],
   },
   {
     label: "Equipe",
     titleHtml: "Fotos da equipe",
-    textHtml: "Galeria institucional para valorizar o time responsavel pela rotina de seguranca.",
+    textHtml: "Galeria institucional para valorizar o time responsável pela rotina de segurança.",
     image: "./assets/destaque-equipe.jpg",
-    alt: "Foto da equipe de seguranca",
+    alt: "Foto da equipe de segurança",
     status: "Equipe",
     photos: [
-      { src: "./assets/destaque-equipe.jpg", alt: "Foto principal da equipe de seguranca" },
-      { src: "./assets/destaque-equipe-02.jpg", alt: "Segunda foto da equipe de seguranca" },
-      { src: "./assets/destaque-equipe-03.jpg", alt: "Terceira foto da equipe de seguranca" },
+      { src: "./assets/destaque-equipe.jpg", alt: "Foto principal da equipe de segurança" },
+      { src: "./assets/destaque-equipe-02.jpg", alt: "Segunda foto da equipe de segurança" },
+      { src: "./assets/destaque-equipe-03.jpg", alt: "Terceira foto da equipe de segurança" },
     ],
   },
 ];
 
 const mediaItems = [
   {
-    titleHtml: "DDS - Seguranca nas Maos",
-    textHtml: "Video curto para reforco comportamental em campo.",
-    meta: "Duracao: 02:35",
+    titleHtml: "DDS - Segurança nas Mãos",
+    textHtml: "Vídeo curto para reforço comportamental em campo.",
+    meta: "Duração: 02:35",
   },
   {
     titleHtml: "Bloqueio e Etiquetagem",
-    textHtml: "Liberacao critica para atividades com energia perigosa.",
-    meta: "Duracao: 05:10",
+    textHtml: "Liberação crítica para atividades com energia perigosa.",
+    meta: "Duração: 05:10",
   },
   {
     titleHtml: "Trabalho em Altura - Reciclagem",
     textHtml: "Trilha com vencimento acompanhado pelo SGI.",
-    meta: "Progresso medio: 65%",
+    meta: "Progresso médio: 65%",
   },
 ];
 
@@ -425,7 +425,7 @@ function statusClass(status) {
 }
 
 function shouldEmbedIntegration(item) {
-  return ["Acesso", "Comunicado", "Formulario", "Formulário"].includes(item.type);
+  return ["Acesso", "Comunicado", "Formulário"].includes(item.type);
 }
 
 function loadEpiRecords() {
@@ -475,7 +475,7 @@ function isSpreadsheetAccess(item) {
 }
 
 function isRequestAccess(item) {
-  return ["Acesso", "Comunicado", "Formulario", "Formulário"].includes(item.type);
+  return ["Acesso", "Comunicado", "Formulário"].includes(item.type);
 }
 
 function getEpiTotals() {
@@ -516,7 +516,7 @@ function getOperationalMetrics() {
 
 function getCalculatedRanking() {
   const totalsByEmployee = epiRecords.reduce((acc, record) => {
-    const name = record.employee || "Sem identificacao";
+    const name = record.employee || "Sem identificação";
     acc[name] = (acc[name] || 0) + Number(record.quantity || 1);
     return acc;
   }, {});
@@ -570,7 +570,7 @@ function renderCalculatedMetrics() {
   setText(metricNodes.statusOpenLabel, `${metrics.openAudits} auditoria + ${metrics.epiTotals.soon + metrics.epiTotals.expired} EPI`);
   setText(metricNodes.blueprintRequests, String(metrics.totalRequests));
   setText(metricNodes.blueprintSheets, String(metrics.spreadsheetAccesses));
-  setText(metricNodes.blueprintCompliant, metrics.openItems ? "Nao" : "Sim");
+  setText(metricNodes.blueprintCompliant, metrics.openItems ? "Não" : "Sim");
   setText(metricNodes.blueprintOpenItems, String(metrics.openItems).padStart(2, "0"));
   setText(metricNodes.previewRequests, String(metrics.totalRequests));
   setText(metricNodes.previewCompliance, `${metrics.compliance}%`);
@@ -668,7 +668,7 @@ function updateHighlightModal(index) {
   const highlight = highlights[activeHighlightIndex];
   const photos = getHighlightPhotos(highlight);
 
-  if (highlightModalTitle) highlightModalTitle.textContent = `Visualizacao: ${toPlainText(highlight.titleHtml)}`;
+  if (highlightModalTitle) highlightModalTitle.textContent = `Visualização: ${toPlainText(highlight.titleHtml)}`;
   if (highlightModalSubtitle) highlightModalSubtitle.innerHTML = highlight.titleHtml;
   if (highlightModalText) highlightModalText.innerHTML = highlight.textHtml;
   if (highlightModalStatus) highlightModalStatus.textContent = highlight.status;
@@ -777,7 +777,7 @@ function renderAudits() {
   if (!rows.length) {
     auditRows.innerHTML = `
       <tr>
-        <td colspan="5">Nenhuma acao aberta cadastrada em fonte integrada.</td>
+        <td colspan="5">Nenhuma ação aberta cadastrada em fonte integrada.</td>
       </tr>
     `;
     toggleResolved.innerHTML = `<span>${showResolved ? "Ocultar resolvidos" : "Mostrar resolvidos"}</span>`;
@@ -956,7 +956,7 @@ function renderIndicators() {
   const metrics = getOperationalMetrics();
   const calculatedIndicators = [
     {
-      label: "Requisicoes",
+      label: "Requisições",
       value: String(metrics.totalRequests).padStart(2, "0"),
       goal: `${metrics.requestAccesses} acessos + ${epiRecords.length} EPIs`,
       tone: "info",
@@ -1046,7 +1046,7 @@ function renderEpiRecords() {
         <tr>
           <td>
             <strong>${record.employee}</strong>
-            <span>${record.registration || "Sem matricula"}</span>
+            <span>${record.registration || "Sem matrícula"}</span>
           </td>
           <td>
             <strong>${record.item}</strong>
