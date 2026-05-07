@@ -252,7 +252,7 @@ const teamHighlightPhotoNames = [
 
 function createHighlightPhotos(category, names, altBase) {
   return names.map((name, index) => ({
-    src: `./assets/destaques/${category}/${encodeURIComponent(name)}`,
+    src: `./assets/destaques/${category}/${name}`,
     alt: index === 0 ? `Foto principal de ${altBase}` : `Foto ${index + 1} de ${altBase}`,
   }));
 }
