@@ -229,71 +229,85 @@ const campaigns = [
   },
 ];
 
+const sharedHighlightPhotoNames = [
+  "WhatsApp Image 2026-05-07 at 12.44.26 (3).jpeg",
+  "WhatsApp Image 2026-05-07 at 12.44.26 (4).jpeg",
+  "WhatsApp Image 2026-05-07 at 12.44.26 (5).jpeg",
+  "WhatsApp Image 2026-05-07 at 12.44.26 (6).jpeg",
+  "WhatsApp Image 2026-05-07 at 12.44.26.jpeg",
+  "WhatsApp Image 2026-05-07 at 12.44.27 (1).jpeg",
+  "WhatsApp Image 2026-05-07 at 12.44.27 (2).jpeg",
+  "WhatsApp Image 2026-05-07 at 12.44.27 (3).jpeg",
+  "WhatsApp Image 2026-05-07 at 12.44.27 (4).jpeg",
+  "WhatsApp Image 2026-05-07 at 12.44.27.jpeg",
+  "WhatsApp Image 2026-05-07 at 12.44.29 (1).jpeg",
+  "WhatsApp Image 2026-05-07 at 12.44.29.jpeg",
+];
+
+const teamHighlightPhotoNames = [
+  "WhatsApp Image 2026-05-07 at 12.44.26 (1).jpeg",
+  "WhatsApp Image 2026-05-07 at 12.44.26 (2).jpeg",
+  ...sharedHighlightPhotoNames,
+];
+
+function createHighlightPhotos(category, names, altBase) {
+  return names.map((name, index) => ({
+    src: `./assets/destaques/${category}/${encodeURIComponent(name)}`,
+    alt: index === 0 ? `Foto principal de ${altBase}` : `Foto ${index + 1} de ${altBase}`,
+  }));
+}
+
+const safetyHighlightPhotos = createHighlightPhotos("seguranca", sharedHighlightPhotoNames, "segurança");
+const kaizenHighlightPhotos = createHighlightPhotos("kaizen", sharedHighlightPhotoNames, "Kaizen");
+const n3HighlightPhotos = createHighlightPhotos("n3", sharedHighlightPhotoNames, "N3");
+const inspectionHighlightPhotos = createHighlightPhotos("inspecao", sharedHighlightPhotoNames, "inspeção");
+const teamHighlightPhotos = createHighlightPhotos("equipe", teamHighlightPhotoNames, "equipe");
+
 const highlights = [
   {
     label: "Segurança",
     titleHtml: "Destaque do mês em segurança",
     textHtml: "Reconhecimento para atitude preventiva, cuidado ativo e boas práticas em campo.",
-    image: "./assets/destaque-seguranca.jpg",
-    alt: "Foto do destaque do mês em segurança",
+    image: safetyHighlightPhotos[0].src,
+    alt: safetyHighlightPhotos[0].alt,
     status: "Mensal",
-    photos: [
-      { src: "./assets/destaque-seguranca.jpg", alt: "Foto principal do destaque do mês em segurança" },
-      { src: "./assets/destaque-seguranca-02.jpg", alt: "Segunda foto do destaque do mês em segurança" },
-      { src: "./assets/destaque-seguranca-03.jpg", alt: "Terceira foto do destaque do mês em segurança" },
-    ],
+    photos: safetyHighlightPhotos,
   },
   {
     label: "Kaizen",
     titleHtml: "Destaque Kaizen",
     textHtml: "Melhoria aplicada que reduziu risco, aumentou organização ou elevou a eficiência da operação.",
-    image: "./assets/destaque-kaizen.jpg",
-    alt: "Foto do destaque Kaizen",
+    image: kaizenHighlightPhotos[0].src,
+    alt: kaizenHighlightPhotos[0].alt,
     status: "Melhoria",
-    photos: [
-      { src: "./assets/destaque-kaizen.jpg", alt: "Foto principal do destaque Kaizen" },
-      { src: "./assets/destaque-kaizen-02.jpg", alt: "Segunda foto do destaque Kaizen" },
-      { src: "./assets/destaque-kaizen-03.jpg", alt: "Terceira foto do destaque Kaizen" },
-    ],
+    photos: kaizenHighlightPhotos,
   },
   {
     label: "N3",
     titleHtml: "N3 destaque",
     textHtml: "Registro de desvio, tratativa ou ação exemplar com impacto direto na segurança operacional.",
-    image: "./assets/destaque-n3.jpg",
-    alt: "Foto do destaque N3",
+    image: n3HighlightPhotos[0].src,
+    alt: n3HighlightPhotos[0].alt,
     status: "Operação",
-    photos: [
-      { src: "./assets/destaque-n3.jpg", alt: "Foto principal do destaque N3" },
-      { src: "./assets/destaque-n3-02.jpg", alt: "Segunda foto do destaque N3" },
-      { src: "./assets/destaque-n3-03.jpg", alt: "Terceira foto do destaque N3" },
-    ],
+    photos: n3HighlightPhotos,
   },
   {
     label: "Inspeção",
     titleHtml: "Inspeção destaque",
     textHtml: "Inspeção com evidência forte, critério técnico e encaminhamento claro para a rotina.",
-    image: "./assets/destaque-inspecao.jpg",
-    alt: "Foto da inspeção destaque",
+    image: inspectionHighlightPhotos[0].src,
+    alt: inspectionHighlightPhotos[0].alt,
     status: "Auditoria",
-    photos: [
-      { src: "./assets/destaque-inspecao.jpg", alt: "Foto principal da inspeção destaque" },
-      { src: "./assets/destaque-inspecao-02.jpg", alt: "Segunda foto da inspeção destaque" },
-      { src: "./assets/destaque-inspecao-03.jpg", alt: "Terceira foto da inspeção destaque" },
-    ],
+    photos: inspectionHighlightPhotos,
   },
   {
     label: "Equipe",
     titleHtml: "Fotos da equipe",
     textHtml: "Galeria institucional para valorizar o time responsável pela rotina de segurança.",
-    image: "./assets/destaque-equipe.jpg",
-    alt: "Foto da equipe de segurança",
+    image: teamHighlightPhotos[0].src,
+    alt: teamHighlightPhotos[0].alt,
     status: "Equipe",
-    photos: [
-      { src: "./assets/destaque-equipe.jpg", alt: "Foto principal da equipe de segurança" },
-      { src: "./assets/destaque-equipe-02.jpg", alt: "Segunda foto da equipe de segurança" },
-      { src: "./assets/destaque-equipe-03.jpg", alt: "Terceira foto da equipe de segurança" },
-    ],
+    photos: teamHighlightPhotos,
   },
 ];
 
