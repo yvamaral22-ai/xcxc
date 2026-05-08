@@ -331,6 +331,18 @@ const mediaItems = [
 
 const epiStorageKey = "sgiEpiRecordsV2";
 const defaultEpiRecords = [];
+const usageStorageKey = "sgiUsageMetricsV1";
+const defaultUsageMetrics = {
+  integrationOpens: {},
+  ownerAccesses: {},
+  typeAccesses: {},
+  highlightViews: {},
+  totalIntegrationOpens: 0,
+  totalEmbeddedOpens: 0,
+  totalExternalOpens: 0,
+  totalHighlightViews: 0,
+  updatedAt: null,
+};
 
 const roadmap = [
   {
@@ -405,6 +417,7 @@ const highlightPrev = document.querySelector("#highlightPrev");
 const highlightNext = document.querySelector("#highlightNext");
 let showResolved = true;
 let epiRecords = loadEpiRecords();
+let usageMetrics = loadUsageMetrics();
 let highlightPhotoScrollDistance = 0;
 let activeHighlightIndex = 0;
 let lastHighlightTrigger = null;
@@ -420,6 +433,7 @@ const metricNodes = {
   statusRequests: document.querySelector("#statusRequests"),
   statusRequestsLabel: document.querySelector("#statusRequestsLabel"),
   statusIntegrations: document.querySelector("#statusIntegrations"),
+  statusIntegrationsLabel: document.querySelector("#statusIntegrationsLabel"),
   statusOpenItems: document.querySelector("#statusOpenItems"),
   statusOpenLabel: document.querySelector("#statusOpenLabel"),
   blueprintRequests: document.querySelector("#blueprintRequests"),
@@ -453,6 +467,54 @@ function loadEpiRecords() {
 
 function saveEpiRecords() {
   localStorage.setItem(epiStorageKey, JSON.stringify(epiRecords));
+}
+
+function loadUsageMetrics() {
+  try {
+    const stored = localStorage.getItem(usageStorageKey);
+    return stored ? { ...defaultUsageMetrics, ...JSON.parse(stored) } : { ...defaultUsageMetrics };
+  } catch (error) {
+    return { ...defaultUsageMetrics };
+  }
+}
+
+function saveUsageMetrics() {
+  localStorage.setItem(usageStorageKey, JSON.stringify(usageMetrics));
+}
+
+function incrementMetricCounter(group, key, amount = 1) {
+  if (!key) return;
+  usageMetrics[group] = usageMetrics[group] || {};
+  usageMetrics[group][key] = (usageMetrics[group][key] || 0) + amount;
+}
+
+function recordIntegrationUsage(item) {
+  if (!item) return;
+
+  incrementMetricCounter("integrationOpens", item.title);
+  incrementMetricCounter("ownerAccesses", item.owner || "Sem origem");
+  incrementMetricCounter("typeAccesses", item.type || "Sem tipo");
+
+  usageMetrics.totalIntegrationOpens = (usageMetrics.totalIntegrationOpens || 0) + 1;
+  if (shouldEmbedIntegration(item)) {
+    usageMetrics.totalEmbeddedOpens = (usageMetrics.totalEmbeddedOpens || 0) + 1;
+  } else {
+    usageMetrics.totalExternalOpens = (usageMetrics.totalExternalOpens || 0) + 1;
+  }
+  usageMetrics.updatedAt = new Date().toISOString();
+  saveUsageMetrics();
+  renderCalculatedMetrics();
+  renderIndicators();
+}
+
+function recordHighlightUsage(highlight) {
+  if (!highlight) return;
+
+  const label = toPlainText(highlight.label || highlight.titleHtml || "Destaque");
+  incrementMetricCounter("highlightViews", label);
+  usageMetrics.totalHighlightViews = (usageMetrics.totalHighlightViews || 0) + 1;
+  usageMetrics.updatedAt = new Date().toISOString();
+  saveUsageMetrics();
 }
 
 function addDays(dateValue, days) {
@@ -506,15 +568,19 @@ function getEpiTotals() {
 }
 
 function getOperationalMetrics() {
-  const activeIntegrations = integrations.filter((item) => item.status === "Ativo").length;
-  const spreadsheetAccesses = integrations.filter(isSpreadsheetAccess).length;
-  const requestAccesses = integrations.filter(isRequestAccess).length;
+  const integrationOpenCounts = usageMetrics.integrationOpens || {};
+  const usedIntegrationTitles = Object.keys(integrationOpenCounts).filter((title) => integrationOpenCounts[title] > 0);
+  const activeIntegrations = usedIntegrationTitles.length;
+  const spreadsheetAccesses = integrations
+    .filter(isSpreadsheetAccess)
+    .reduce((total, item) => total + (integrationOpenCounts[item.title] || 0), 0);
+  const requestAccesses = usageMetrics.totalEmbeddedOpens || 0;
   const openAudits = audits.filter((audit) => audit.status !== "Resolvido").length;
   const epiTotals = getEpiTotals();
   const openItems = openAudits + epiTotals.soon + epiTotals.expired;
-  const totalTracked = requestAccesses + epiRecords.length + audits.length;
-  const compliantTracked = requestAccesses + epiTotals.ok + audits.filter((audit) => audit.status === "Resolvido").length;
-  const compliance = totalTracked ? Math.round((compliantTracked / totalTracked) * 100) : 100;
+  const totalTracked = epiRecords.length + audits.length;
+  const compliantTracked = epiTotals.ok + audits.filter((audit) => audit.status === "Resolvido").length;
+  const compliance = totalTracked ? Math.round((compliantTracked / totalTracked) * 100) : 0;
 
   return {
     activeIntegrations,
@@ -524,6 +590,9 @@ function getOperationalMetrics() {
     epiTotals,
     openItems,
     totalRequests: requestAccesses + epiRecords.length,
+    totalTracked,
+    totalIntegrationOpens: usageMetrics.totalIntegrationOpens || 0,
+    totalHighlightViews: usageMetrics.totalHighlightViews || 0,
     compliance,
   };
 }
@@ -542,14 +611,10 @@ function getCalculatedRanking() {
 }
 
 function getCalculatedOrigins() {
-  const totalsByOwner = integrations.reduce((acc, item) => {
-    const name = item.owner || "Sem origem";
-    acc[name] = (acc[name] || 0) + 1;
-    return acc;
-  }, {});
+  const totalsByOwner = usageMetrics.ownerAccesses || {};
 
   return Object.entries(totalsByOwner)
-    .map(([name, value]) => ({ name, value, detail: "Acessos cadastrados" }))
+    .map(([name, value]) => ({ name, value, detail: "Acessos realizados" }))
     .sort((a, b) => b.value - a.value)
     .slice(0, 4);
 }
@@ -576,15 +641,16 @@ function renderCalculatedMetrics() {
   setText(metricNodes.miniOpenItems, String(metrics.openItems).padStart(2, "0"));
   setText(metricNodes.heroIntegrationCount, String(metrics.activeIntegrations).padStart(2, "0"));
   setText(metricNodes.statusCompliance, `${metrics.compliance}%`);
-  setText(metricNodes.statusComplianceLabel, `${metrics.epiTotals.ok} EPIs em dia`);
+  setText(metricNodes.statusComplianceLabel, metrics.totalTracked ? `${metrics.epiTotals.ok} EPIs em dia` : "Sem dados reais");
   setText(metricNodes.statusRequests, String(metrics.totalRequests).padStart(2, "0"));
   setText(metricNodes.statusRequestsLabel, `${metrics.requestAccesses} acessos + ${epiRecords.length} entregas`);
   setText(metricNodes.statusIntegrations, String(metrics.activeIntegrations).padStart(2, "0"));
+  setText(metricNodes.statusIntegrationsLabel, `${metrics.totalIntegrationOpens} aberturas registradas`);
   setText(metricNodes.statusOpenItems, String(metrics.openItems).padStart(2, "0"));
   setText(metricNodes.statusOpenLabel, `${metrics.openAudits} auditoria + ${metrics.epiTotals.soon + metrics.epiTotals.expired} EPI`);
   setText(metricNodes.blueprintRequests, String(metrics.totalRequests));
   setText(metricNodes.blueprintSheets, String(metrics.spreadsheetAccesses));
-  setText(metricNodes.blueprintCompliant, metrics.openItems ? "Não" : "Sim");
+  setText(metricNodes.blueprintCompliant, metrics.totalTracked && !metrics.openItems ? "Sim" : "Não");
   setText(metricNodes.blueprintOpenItems, String(metrics.openItems).padStart(2, "0"));
   setText(metricNodes.previewRequests, String(metrics.totalRequests));
   setText(metricNodes.previewCompliance, `${metrics.compliance}%`);
@@ -972,20 +1038,20 @@ function renderIndicators() {
     {
       label: "Requisições",
       value: String(metrics.totalRequests).padStart(2, "0"),
-      goal: `${metrics.requestAccesses} acessos + ${epiRecords.length} EPIs`,
+      goal: `${metrics.requestAccesses} acessos reais + ${epiRecords.length} EPIs`,
       tone: "info",
     },
     {
       label: "Planilhas / docs",
       value: String(metrics.spreadsheetAccesses).padStart(2, "0"),
-      goal: "Acessos calculados",
+      goal: "Aberturas registradas",
       tone: "info",
     },
     {
       label: "Conformidade",
       value: `${metrics.compliance}%`,
-      goal: `${metrics.epiTotals.ok} EPIs em dia`,
-      tone: metrics.compliance >= 90 ? "good" : "warn",
+      goal: metrics.totalTracked ? `${metrics.epiTotals.ok} EPIs em dia` : "Sem dados reais",
+      tone: metrics.totalTracked && metrics.compliance >= 90 ? "good" : "warn",
     },
     {
       label: "Abertos",
@@ -1021,17 +1087,20 @@ function renderIndicators() {
         .join("")
     : `<div><span>Sem entregas cadastradas</span><strong>0</strong></div>`;
 
-  unitGrid.innerHTML = getCalculatedOrigins()
-    .map(
-      (unit) => `
-        <div>
-          <span>${unit.name}</span>
-          <strong>${unit.value}</strong>
-          <em>${unit.detail}</em>
-        </div>
-      `,
-    )
-    .join("");
+  const calculatedOrigins = getCalculatedOrigins();
+  unitGrid.innerHTML = calculatedOrigins.length
+    ? calculatedOrigins
+        .map(
+          (unit) => `
+            <div>
+              <span>${unit.name}</span>
+              <strong>${unit.value}</strong>
+              <em>${unit.detail}</em>
+            </div>
+          `,
+        )
+        .join("")
+    : `<div><span>Sem acessos registrados</span><strong>0</strong><em>Use os links do portal</em></div>`;
 }
 
 function renderEpiRecords() {
@@ -1117,6 +1186,7 @@ integrationGrid?.addEventListener("click", (event) => {
 
   const item = integrations[Number(trigger.dataset.integrationIndex)];
   if (item) {
+    recordIntegrationUsage(item);
     openEmbeddedIntegration(item);
   }
 });
@@ -1125,18 +1195,30 @@ highlightGrid?.addEventListener("click", (event) => {
   const trigger = event.target.closest("[data-highlight-index]");
   if (!trigger) return;
 
-  openHighlightModal(Number(trigger.dataset.highlightIndex), trigger);
+  const highlightIndex = Number(trigger.dataset.highlightIndex);
+  recordHighlightUsage(highlights[highlightIndex]);
+  openHighlightModal(highlightIndex, trigger);
 });
 
 highlightModalTrack?.addEventListener("click", (event) => {
   const trigger = event.target.closest("[data-highlight-thumb]");
   if (!trigger) return;
 
-  updateHighlightModal(Number(trigger.dataset.highlightThumb));
+  const highlightIndex = Number(trigger.dataset.highlightThumb);
+  recordHighlightUsage(highlights[highlightIndex]);
+  updateHighlightModal(highlightIndex);
 });
 
-highlightPrev?.addEventListener("click", () => moveHighlightModal(-1));
-highlightNext?.addEventListener("click", () => moveHighlightModal(1));
+highlightPrev?.addEventListener("click", () => {
+  const nextIndex = (activeHighlightIndex - 1 + highlights.length) % highlights.length;
+  recordHighlightUsage(highlights[nextIndex]);
+  moveHighlightModal(-1);
+});
+highlightNext?.addEventListener("click", () => {
+  const nextIndex = (activeHighlightIndex + 1) % highlights.length;
+  recordHighlightUsage(highlights[nextIndex]);
+  moveHighlightModal(1);
+});
 
 document.querySelectorAll("[data-highlight-close]").forEach((button) => {
   button.addEventListener("click", closeHighlightModal);
@@ -1162,11 +1244,14 @@ document.addEventListener("click", (event) => {
   const link = event.target.closest("a[href]");
   if (!link || link === formExternalLink) return;
 
-  const item = integrations.find((integration) => integration.href === link.href && shouldEmbedIntegration(integration));
+  const item = integrations.find((integration) => integration.href === link.href);
   if (!item) return;
 
-  event.preventDefault();
-  openEmbeddedIntegration(item);
+  recordIntegrationUsage(item);
+  if (shouldEmbedIntegration(item)) {
+    event.preventDefault();
+    openEmbeddedIntegration(item);
+  }
 });
 
 epiForm?.addEventListener("submit", (event) => {
