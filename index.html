@@ -153,6 +153,18 @@
           </article>
         </section>
 
+        <section class="section-block data-trust-panel" aria-label="Confiabilidade das fontes de dados">
+          <div class="section-heading compact-heading">
+            <div>
+              <span class="eyebrow">Confiabilidade operacional</span>
+              <h2>Mapa das fontes do portal</h2>
+            </div>
+            <p>Separação clara entre acessos reais, registros locais do navegador e conteúdo demonstrativo.</p>
+          </div>
+
+          <div class="data-source-grid" id="dataSourceGrid"></div>
+        </section>
+
         <section class="section-block blueprint-board" id="croqui" aria-label="Croqui executivo audiovisual">
           <div class="blueprint-header">
             <div>
@@ -199,7 +211,7 @@
             </article>
 
             <article class="blueprint-panel blueprint-reference">
-              <span class="blueprint-index">Referencia audiovisual</span>
+              <span class="blueprint-index">Referência audiovisual</span>
               <div class="reference-mosaic" aria-hidden="true">
                 <div class="reference-main">
                   <img src="./assets/sgi-hero.png" alt="" />
@@ -412,16 +424,16 @@
                 <input id="epiEmployee" name="employee" type="text" placeholder="Nome do colaborador" required />
               </label>
               <label>
-                <span>Matricula / ID</span>
+                <span>Matrícula / ID</span>
                 <input id="epiRegistration" name="registration" type="text" placeholder="Ex.: XCMG-1024" />
               </label>
               <label>
                 <span>EPI entregue</span>
-                <input id="epiItem" name="item" type="text" placeholder="Ex.: Capacete, luva, oculos" required />
+                <input id="epiItem" name="item" type="text" placeholder="Ex.: Capacete, luva, óculos" required />
               </label>
               <label>
-                <span>CA / Codigo</span>
-                <input id="epiCode" name="code" type="text" placeholder="Certificado ou codigo interno" />
+                <span>CA / Código</span>
+                <input id="epiCode" name="code" type="text" placeholder="Certificado ou código interno" />
               </label>
               <label>
                 <span>Data e hora da entrega</span>
@@ -539,7 +551,60 @@
             <button class="button neutral" type="button" id="toggleResolved"><span>Ocultar resolvidos</span></button>
           </div>
 
-          <div class="table-wrap">
+          <div class="audit-layout">
+            <form class="audit-form" id="auditForm">
+              <label>
+                <span>Ação ou evidência</span>
+                <input id="auditItem" name="item" type="text" placeholder="Ex.: Atualizar procedimento de bloqueio" required />
+              </label>
+              <label>
+                <span>Origem</span>
+                <input id="auditOrigin" name="origin" type="text" placeholder="Ex.: Inspeção N3, auditoria interna" />
+              </label>
+              <label>
+                <span>Responsável</span>
+                <input id="auditOwner" name="owner" type="text" placeholder="Nome ou área responsável" required />
+              </label>
+              <label>
+                <span>Prazo</span>
+                <input id="auditDue" name="due" type="date" required />
+              </label>
+              <label>
+                <span>Status</span>
+                <select id="auditStatus" name="status">
+                  <option value="Aberto">Aberto</option>
+                  <option value="Em andamento">Em andamento</option>
+                  <option value="Prioridade">Prioridade</option>
+                  <option value="Resolvido">Resolvido</option>
+                </select>
+              </label>
+              <label class="audit-evidence-field">
+                <span>Observação / evidência</span>
+                <input id="auditEvidence" name="evidence" type="text" placeholder="Link, documento, evidência ou tratativa" />
+              </label>
+              <div class="epi-form-actions">
+                <button class="button primary" type="submit"><span>Cadastrar ação</span></button>
+                <button class="button neutral" type="button" id="clearAuditRecords"><span>Limpar auditoria</span></button>
+              </div>
+            </form>
+
+            <div class="audit-summary" aria-label="Resumo da auditoria">
+              <div>
+                <span>Abertos</span>
+                <strong id="auditOpenCount">0</strong>
+              </div>
+              <div>
+                <span>Em andamento</span>
+                <strong id="auditProgressCount">0</strong>
+              </div>
+              <div>
+                <span>Resolvidos</span>
+                <strong id="auditDoneCount">0</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrap audit-table-wrap">
             <table>
               <thead>
                 <tr>
@@ -548,6 +613,7 @@
                   <th>Respons&aacute;vel</th>
                   <th>Prazo</th>
                   <th>Status</th>
+                  <th>A&ccedil;&otilde;es</th>
                 </tr>
               </thead>
               <tbody id="auditRows"></tbody>
@@ -644,12 +710,12 @@
             <div class="highlight-viewer-content">
               <span class="tag" id="highlightModalStatus">Mensal</span>
               <h3 id="highlightModalSubtitle">Destaque</h3>
-              <p id="highlightModalText">Conteudo do destaque.</p>
+              <p id="highlightModalText">Conteúdo do destaque.</p>
               <span class="highlight-counter" id="highlightModalCounter">1 de 5</span>
             </div>
           </article>
 
-          <button class="highlight-nav-button" type="button" id="highlightNext" aria-label="Proximo destaque">
+          <button class="highlight-nav-button" type="button" id="highlightNext" aria-label="Próximo destaque">
             <span aria-hidden="true">&#8250;</span>
           </button>
         </div>

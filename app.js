@@ -203,8 +203,6 @@ const integrations = [
   },
 ];
 
-const audits = [];
-
 const campaigns = [
   {
     titleHtml: "Treinamento Trabalho em Altura",
@@ -331,6 +329,8 @@ const mediaItems = [
 
 const epiStorageKey = "sgiEpiRecordsV2";
 const defaultEpiRecords = [];
+const auditStorageKey = "sgiAuditRecordsV1";
+const defaultAuditRecords = [];
 const usageStorageKey = "sgiUsageMetricsV1";
 const defaultUsageMetrics = {
   integrationOpens: {},
@@ -375,9 +375,27 @@ const roadmap = [
   },
 ];
 
+const dataSourceTypes = {
+  real: {
+    label: "Fonte real",
+    title: "Acessos reais",
+    description: "Links oficiais para Vale, Microsoft Forms, SharePoint e canais operacionais externos.",
+  },
+  local: {
+    label: "Registro local",
+    title: "Registros locais",
+    description: "Dados calculados neste navegador, como entregas de EPI e aberturas feitas pelo usuário.",
+  },
+  demo: {
+    label: "Demonstração",
+    title: "Conteúdo demonstrativo",
+    description: "Blocos editoriais preparados para apresentação, sem integração automática com fonte oficial.",
+  },
+};
+
 const moduleGrid = document.querySelector("#moduleGrid");
 const integrationGrid = document.querySelector("#integrationGrid");
-const auditRows = document.querySelector("#auditRows");
+const dataSourceGrid = document.querySelector("#dataSourceGrid");
 const roadmapNode = document.querySelector("#roadmap");
 const campaignList = document.querySelector("#campaignList");
 const mediaList = document.querySelector("#mediaList");
@@ -392,6 +410,13 @@ const epiDeliveredAt = document.querySelector("#epiDeliveredAt");
 const epiOkCount = document.querySelector("#epiOkCount");
 const epiSoonCount = document.querySelector("#epiSoonCount");
 const epiExpiredCount = document.querySelector("#epiExpiredCount");
+const auditForm = document.querySelector("#auditForm");
+const auditRows = document.querySelector("#auditRows");
+const auditDue = document.querySelector("#auditDue");
+const auditOpenCount = document.querySelector("#auditOpenCount");
+const auditProgressCount = document.querySelector("#auditProgressCount");
+const auditDoneCount = document.querySelector("#auditDoneCount");
+const clearAuditRecords = document.querySelector("#clearAuditRecords");
 const searchInput = document.querySelector("#integrationSearch");
 const toggleResolved = document.querySelector("#toggleResolved");
 const navToggle = document.querySelector("#navToggle");
@@ -417,10 +442,13 @@ const highlightPrev = document.querySelector("#highlightPrev");
 const highlightNext = document.querySelector("#highlightNext");
 let showResolved = true;
 let epiRecords = loadEpiRecords();
+let audits = loadAuditRecords();
 let usageMetrics = loadUsageMetrics();
 let highlightPhotoScrollDistance = 0;
 let activeHighlightIndex = 0;
 let lastHighlightTrigger = null;
+let persistenceMode = "browser";
+let serverSyncPending = false;
 
 const metricNodes = {
   miniCompliance: document.querySelector("#miniCompliance"),
@@ -452,6 +480,10 @@ function statusClass(status) {
   return "warn";
 }
 
+function sourceMeta(type) {
+  return dataSourceTypes[type] || dataSourceTypes.demo;
+}
+
 function shouldEmbedIntegration(item) {
   return ["Acesso", "Comunicado", "Formulário"].includes(item.type);
 }
@@ -467,6 +499,21 @@ function loadEpiRecords() {
 
 function saveEpiRecords() {
   localStorage.setItem(epiStorageKey, JSON.stringify(epiRecords));
+  persistServerState("epi");
+}
+
+function loadAuditRecords() {
+  try {
+    const stored = localStorage.getItem(auditStorageKey);
+    return stored ? JSON.parse(stored) : [...defaultAuditRecords];
+  } catch (error) {
+    return [...defaultAuditRecords];
+  }
+}
+
+function saveAuditRecords() {
+  localStorage.setItem(auditStorageKey, JSON.stringify(audits));
+  persistServerState("audits");
 }
 
 function loadUsageMetrics() {
@@ -480,6 +527,117 @@ function loadUsageMetrics() {
 
 function saveUsageMetrics() {
   localStorage.setItem(usageStorageKey, JSON.stringify(usageMetrics));
+  persistServerState("usage");
+}
+
+function canUseServerApi() {
+  return window.location.protocol === "http:" || window.location.protocol === "https:";
+}
+
+async function apiRequest(path, options = {}) {
+  const response = await fetch(path, {
+    headers: {
+      "content-type": "application/json",
+      ...(options.headers || {}),
+    },
+    ...options,
+  });
+
+  if (!response.ok) {
+    throw new Error(`API ${response.status}`);
+  }
+
+  return response.json();
+}
+
+function mergeUsageMetrics(nextMetrics) {
+  usageMetrics = {
+    ...defaultUsageMetrics,
+    ...(nextMetrics && typeof nextMetrics === "object" ? nextMetrics : {}),
+  };
+}
+
+function hasUsageActivity(metrics) {
+  return Boolean(
+    metrics &&
+      ((metrics.totalIntegrationOpens || 0) > 0 ||
+        (metrics.totalHighlightViews || 0) > 0 ||
+        Object.keys(metrics.integrationOpens || {}).length ||
+        Object.keys(metrics.highlightViews || {}).length)
+  );
+}
+
+async function persistServerState(scope) {
+  if (!canUseServerApi() || persistenceMode !== "server") return;
+
+  try {
+    serverSyncPending = true;
+    if (scope === "epi") {
+      await apiRequest("/api/epi", {
+        method: "PUT",
+        body: JSON.stringify({ epiRecords }),
+      });
+    }
+
+    if (scope === "audits") {
+      await apiRequest("/api/audits", {
+        method: "PUT",
+        body: JSON.stringify({ auditRecords: audits }),
+      });
+    }
+
+    if (scope === "usage") {
+      await apiRequest("/api/usage", {
+        method: "PUT",
+        body: JSON.stringify({ usageMetrics }),
+      });
+    }
+  } catch (error) {
+    persistenceMode = "browser";
+  } finally {
+    serverSyncPending = false;
+    renderDataSources();
+  }
+}
+
+async function initializePersistence() {
+  if (!canUseServerApi()) {
+    renderDataSources();
+    return;
+  }
+
+  try {
+    const localEpiRecords = [...epiRecords];
+    const localAuditRecords = [...audits];
+    const localUsageMetrics = { ...usageMetrics };
+    const state = await apiRequest("/api/state");
+    const serverEpiRecords = Array.isArray(state.epiRecords) ? state.epiRecords : [];
+    const serverAuditRecords = Array.isArray(state.auditRecords) ? state.auditRecords : [];
+    const serverUsageMetrics = { ...defaultUsageMetrics, ...(state.usageMetrics || {}) };
+    const shouldMigrateEpi = !serverEpiRecords.length && localEpiRecords.length;
+    const shouldMigrateAudits = !serverAuditRecords.length && localAuditRecords.length;
+    const shouldMigrateUsage = !hasUsageActivity(serverUsageMetrics) && hasUsageActivity(localUsageMetrics);
+
+    epiRecords = shouldMigrateEpi ? localEpiRecords : serverEpiRecords;
+    audits = shouldMigrateAudits ? localAuditRecords : serverAuditRecords;
+    mergeUsageMetrics(shouldMigrateUsage ? localUsageMetrics : serverUsageMetrics);
+    localStorage.setItem(epiStorageKey, JSON.stringify(epiRecords));
+    localStorage.setItem(auditStorageKey, JSON.stringify(audits));
+    localStorage.setItem(usageStorageKey, JSON.stringify(usageMetrics));
+
+    persistenceMode = "server";
+    if (shouldMigrateEpi) persistServerState("epi");
+    if (shouldMigrateAudits) persistServerState("audits");
+    if (shouldMigrateUsage) persistServerState("usage");
+    renderEpiRecords();
+    renderAudits();
+    renderCalculatedMetrics();
+    renderDataSources();
+    renderIndicators();
+  } catch (error) {
+    persistenceMode = "browser";
+    renderDataSources();
+  }
 }
 
 function incrementMetricCounter(group, key, amount = 1) {
@@ -504,6 +662,7 @@ function recordIntegrationUsage(item) {
   usageMetrics.updatedAt = new Date().toISOString();
   saveUsageMetrics();
   renderCalculatedMetrics();
+  renderDataSources();
   renderIndicators();
 }
 
@@ -619,6 +778,24 @@ function getCalculatedOrigins() {
     .slice(0, 4);
 }
 
+function auditStatusClass(status) {
+  if (status === "Resolvido") return "ok";
+  if (status === "Prioridade") return "danger";
+  return "warn";
+}
+
+function getAuditTotals() {
+  return audits.reduce(
+    (acc, audit) => {
+      if (audit.status === "Resolvido") acc.done += 1;
+      else if (audit.status === "Em andamento") acc.progress += 1;
+      else acc.open += 1;
+      return acc;
+    },
+    { open: 0, progress: 0, done: 0 },
+  );
+}
+
 function setText(node, value) {
   if (node) node.textContent = value;
 }
@@ -628,12 +805,22 @@ function toPlainText(value) {
   return parser.parseFromString(value, "text/html").documentElement.textContent || value;
 }
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function getHighlightPhotos(highlight) {
   return highlight.photos?.length ? highlight.photos : [{ src: highlight.image, alt: highlight.alt }];
 }
 
 function renderCalculatedMetrics() {
   const metrics = getOperationalMetrics();
+  const emptyRecordsLabel = persistenceMode === "server" ? "Sem registros persistentes" : "Sem registros locais";
 
   setText(metricNodes.miniCompliance, `${metrics.compliance}%`);
   setText(metricNodes.miniRequests, String(metrics.totalRequests).padStart(2, "0"));
@@ -641,7 +828,7 @@ function renderCalculatedMetrics() {
   setText(metricNodes.miniOpenItems, String(metrics.openItems).padStart(2, "0"));
   setText(metricNodes.heroIntegrationCount, String(metrics.activeIntegrations).padStart(2, "0"));
   setText(metricNodes.statusCompliance, `${metrics.compliance}%`);
-  setText(metricNodes.statusComplianceLabel, metrics.totalTracked ? `${metrics.epiTotals.ok} EPIs em dia` : "Sem dados reais");
+  setText(metricNodes.statusComplianceLabel, metrics.totalTracked ? `${metrics.epiTotals.ok} EPIs em dia` : emptyRecordsLabel);
   setText(metricNodes.statusRequests, String(metrics.totalRequests).padStart(2, "0"));
   setText(metricNodes.statusRequestsLabel, `${metrics.requestAccesses} acessos + ${epiRecords.length} entregas`);
   setText(metricNodes.statusIntegrations, String(metrics.activeIntegrations).padStart(2, "0"));
@@ -656,6 +843,60 @@ function renderCalculatedMetrics() {
   setText(metricNodes.previewCompliance, `${metrics.compliance}%`);
   setText(metricNodes.previewSheets, String(metrics.spreadsheetAccesses));
   setText(metricNodes.previewOpenItems, String(metrics.openItems).padStart(2, "0"));
+}
+
+function renderDataSources() {
+  if (!dataSourceGrid) return;
+
+  const metrics = getOperationalMetrics();
+  const isServerMode = persistenceMode === "server";
+  const localMeta = sourceMeta("local");
+  const cards = [
+    {
+      type: "real",
+      metric: String(integrations.length).padStart(2, "0"),
+      label: "integrações cadastradas",
+      detail: "Acesso abre ou direciona para sistemas externos oficiais.",
+    },
+    {
+      type: "local",
+      metric: `${epiRecords.length + audits.length} / ${metrics.totalIntegrationOpens}`,
+      label: "EPIs, auditorias e aberturas",
+      title: isServerMode ? "Base persistente" : localMeta.title,
+      badge: isServerMode ? "Servidor local" : localMeta.label,
+      description: isServerMode
+        ? "Dados salvos em data/sgi-db.json pelo servidor Node local."
+        : localMeta.description,
+      detail: isServerMode
+        ? "Disponível para todos que acessarem este servidor local."
+        : "Persistido no navegador atual, sem base compartilhada entre usuários.",
+    },
+    {
+      type: "demo",
+      metric: String(campaigns.length + mediaItems.length + highlights.length + roadmap.length).padStart(2, "0"),
+      label: "itens editoriais",
+      detail: "Conteúdo pronto para apresentação e substituição por fonte oficial.",
+    },
+  ];
+
+  dataSourceGrid.innerHTML = cards
+    .map((card) => {
+      const meta = sourceMeta(card.type);
+      const badge = card.badge || meta.label;
+      const title = card.title || meta.title;
+      const description = card.description || meta.description;
+
+      return `
+        <article class="data-source-card ${card.type}">
+          <span class="data-source-badge ${card.type}">${badge}</span>
+          <strong>${card.metric}</strong>
+          <h3>${title}</h3>
+          <p>${description}</p>
+          <em>${card.label}. ${card.detail}</em>
+        </article>
+      `;
+    })
+    .join("");
 }
 
 function renderModules() {
@@ -694,8 +935,10 @@ function renderIntegrations(filter = "") {
   }
 
   integrationGrid.innerHTML = filtered
-    .map(
-      (item) => `
+    .map((item) => {
+      const source = sourceMeta(item.source || "real");
+
+      return `
         <article class="integration-card">
           <div class="integration-card-header">
             <div>
@@ -707,6 +950,7 @@ function renderIntegrations(filter = "") {
           <div class="card-meta">
             <span>${item.type}</span>
             <span>${item.owner}</span>
+            <span class="data-source-badge real">${source.label}</span>
           </div>
           ${
             shouldEmbedIntegration(item)
@@ -714,8 +958,8 @@ function renderIntegrations(filter = "") {
               : `<a class="button primary has-arrow" href="${item.href}" target="_blank" rel="noreferrer"><span>Abrir</span></a>`
           }
         </article>
-      `,
-    )
+      `;
+    })
     .join("");
 }
 
@@ -853,11 +1097,16 @@ function trapHighlightModalFocus(event) {
 }
 
 function renderAudits() {
+  const totals = getAuditTotals();
+  if (auditOpenCount) auditOpenCount.textContent = totals.open;
+  if (auditProgressCount) auditProgressCount.textContent = totals.progress;
+  if (auditDoneCount) auditDoneCount.textContent = totals.done;
+
   const rows = audits.filter((audit) => showResolved || audit.status !== "Resolvido");
   if (!rows.length) {
     auditRows.innerHTML = `
       <tr>
-        <td colspan="5">Nenhuma ação aberta cadastrada em fonte integrada.</td>
+        <td colspan="6">Nenhuma ação de auditoria cadastrada.</td>
       </tr>
     `;
     toggleResolved.innerHTML = `<span>${showResolved ? "Ocultar resolvidos" : "Mostrar resolvidos"}</span>`;
@@ -865,17 +1114,28 @@ function renderAudits() {
   }
 
   auditRows.innerHTML = rows
-    .map(
-      (audit) => `
+    .map((audit) => {
+      const level = auditStatusClass(audit.status);
+
+      return `
         <tr>
-          <td>${audit.itemHtml}</td>
-          <td>${audit.originHtml}</td>
-          <td>${audit.ownerHtml}</td>
-          <td>${audit.due}</td>
-          <td><span class="status-pill ${audit.level}">${audit.status}</span></td>
+          <td>
+            <strong>${escapeHtml(audit.item)}</strong>
+            <span>${escapeHtml(audit.evidence || "Sem observação")}</span>
+          </td>
+          <td>${escapeHtml(audit.origin || "SGI")}</td>
+          <td>${escapeHtml(audit.owner || "Sem responsável")}</td>
+          <td>${escapeHtml(audit.due || "Sem prazo")}</td>
+          <td><span class="status-pill ${level}">${escapeHtml(audit.status || "Aberto")}</span></td>
+          <td>
+            <div class="table-action-group">
+              <button class="table-action neutral-action" type="button" data-audit-cycle="${audit.id}">Status</button>
+              <button class="table-action" type="button" data-audit-remove="${audit.id}">Remover</button>
+            </div>
+          </td>
         </tr>
-      `,
-    )
+      `;
+    })
     .join("");
 
   toggleResolved.innerHTML = `<span>${showResolved ? "Ocultar resolvidos" : "Mostrar resolvidos"}</span>`;
@@ -1034,30 +1294,35 @@ function renderIndicators() {
   if (!indicatorRings || !rankingList || !unitGrid) return;
 
   const metrics = getOperationalMetrics();
+  const emptyRecordsLabel = persistenceMode === "server" ? "Sem registros persistentes" : "Sem registros locais";
   const calculatedIndicators = [
     {
       label: "Requisições",
       value: String(metrics.totalRequests).padStart(2, "0"),
       goal: `${metrics.requestAccesses} acessos reais + ${epiRecords.length} EPIs`,
       tone: "info",
+      source: "local",
     },
     {
       label: "Planilhas / docs",
       value: String(metrics.spreadsheetAccesses).padStart(2, "0"),
       goal: "Aberturas registradas",
       tone: "info",
+      source: "local",
     },
     {
       label: "Conformidade",
       value: `${metrics.compliance}%`,
-      goal: metrics.totalTracked ? `${metrics.epiTotals.ok} EPIs em dia` : "Sem dados reais",
+      goal: metrics.totalTracked ? `${metrics.epiTotals.ok} EPIs em dia` : emptyRecordsLabel,
       tone: metrics.totalTracked && metrics.compliance >= 90 ? "good" : "warn",
+      source: "local",
     },
     {
       label: "Abertos",
       value: String(metrics.openItems).padStart(2, "0"),
       goal: `${metrics.openAudits} auditoria + ${metrics.epiTotals.soon + metrics.epiTotals.expired} EPI`,
       tone: metrics.openItems ? "danger" : "good",
+      source: audits.length ? "local" : "demo",
     },
   ];
 
@@ -1065,6 +1330,7 @@ function renderIndicators() {
     .map(
       (indicator) => `
         <article class="indicator-ring tone-${indicator.tone}">
+          <small class="data-source-badge ${indicator.source}">${sourceMeta(indicator.source).label}</small>
           <span>${indicator.label}</span>
           <strong>${indicator.value}</strong>
           <em>${indicator.goal}</em>
@@ -1112,6 +1378,7 @@ function renderEpiRecords() {
   if (epiSoonCount) epiSoonCount.textContent = totals.soon;
   if (epiExpiredCount) epiExpiredCount.textContent = totals.expired;
   renderCalculatedMetrics();
+  renderDataSources();
 
   if (!epiRecords.length) {
     epiRows.innerHTML = `
@@ -1128,12 +1395,12 @@ function renderEpiRecords() {
       return `
         <tr>
           <td>
-            <strong>${record.employee}</strong>
-            <span>${record.registration || "Sem matrícula"}</span>
+            <strong>${escapeHtml(record.employee)}</strong>
+            <span>${escapeHtml(record.registration || "Sem matrícula")}</span>
           </td>
           <td>
-            <strong>${record.item}</strong>
-            <span>${record.code || "Sem CA"} | Qtd. ${record.quantity || 1}</span>
+            <strong>${escapeHtml(record.item)}</strong>
+            <span>${escapeHtml(record.code || "Sem CA")} | Qtd. ${escapeHtml(record.quantity || 1)}</span>
           </td>
           <td>${formatDateTime(record.deliveredAt)}</td>
           <td>${record.validityDays} dias</td>
@@ -1153,6 +1420,13 @@ function setDefaultEpiDateTime() {
   const now = new Date();
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
   epiDeliveredAt.value = now.toISOString().slice(0, 16);
+}
+
+function setDefaultAuditDueDate() {
+  if (!auditDue || auditDue.value) return;
+  const date = new Date();
+  date.setDate(date.getDate() + 7);
+  auditDue.value = date.toISOString().slice(0, 10);
 }
 
 function setupHeroTilt() {
@@ -1297,6 +1571,73 @@ clearEpiRecords?.addEventListener("click", () => {
   renderIndicators();
 });
 
+auditForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const formData = new FormData(auditForm);
+
+  audits = [
+    {
+      id: `audit-${Date.now()}`,
+      item: String(formData.get("item") || "").trim(),
+      origin: String(formData.get("origin") || "").trim(),
+      owner: String(formData.get("owner") || "").trim(),
+      due: String(formData.get("due") || ""),
+      status: String(formData.get("status") || "Aberto"),
+      evidence: String(formData.get("evidence") || "").trim(),
+      createdAt: new Date().toISOString(),
+    },
+    ...audits,
+  ];
+
+  saveAuditRecords();
+  renderAudits();
+  renderCalculatedMetrics();
+  renderDataSources();
+  renderIndicators();
+  auditForm.reset();
+  setDefaultAuditDueDate();
+});
+
+auditRows?.addEventListener("click", (event) => {
+  const removeButton = event.target.closest("[data-audit-remove]");
+  const cycleButton = event.target.closest("[data-audit-cycle]");
+
+  if (removeButton) {
+    audits = audits.filter((audit) => audit.id !== removeButton.dataset.auditRemove);
+    saveAuditRecords();
+  }
+
+  if (cycleButton) {
+    const statuses = ["Aberto", "Em andamento", "Prioridade", "Resolvido"];
+    audits = audits.map((audit) => {
+      if (audit.id !== cycleButton.dataset.auditCycle) return audit;
+      const currentIndex = statuses.indexOf(audit.status);
+      return {
+        ...audit,
+        status: statuses[(currentIndex + 1) % statuses.length],
+        updatedAt: new Date().toISOString(),
+      };
+    });
+    saveAuditRecords();
+  }
+
+  if (removeButton || cycleButton) {
+    renderAudits();
+    renderCalculatedMetrics();
+    renderDataSources();
+    renderIndicators();
+  }
+});
+
+clearAuditRecords?.addEventListener("click", () => {
+  audits = [];
+  saveAuditRecords();
+  renderAudits();
+  renderCalculatedMetrics();
+  renderDataSources();
+  renderIndicators();
+});
+
 toggleResolved?.addEventListener("click", () => {
   showResolved = !showResolved;
   renderAudits();
@@ -1325,12 +1666,15 @@ renderModules();
 renderIntegrations();
 renderAudits();
 renderRoadmap();
+renderDataSources();
 renderHighlights();
 renderCampaigns();
 renderIndicators();
 setDefaultEpiDateTime();
+setDefaultAuditDueDate();
 renderEpiRecords();
 renderCalculatedMetrics();
 syncActiveNavigation();
 setupSidebar();
 setupHeroTilt();
+initializePersistence();
